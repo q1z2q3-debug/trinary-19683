@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三元九维19683 大模型</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171b2e; --panel2:#1e2340; --line:#2a3050;
+    --tx:#e8eaf6; --tx2:#aab0d0; --acc:#5b8cff; --acc2:#34d399;
+    --gold:#f5c97b; --red:#ff7b7b; --purple:#a78bfa;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--tx);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
+  .wrap{max-width:960px;margin:0 auto;padding:20px 16px 80px}
+  header{text-align:center;padding:34px 0 8px}
+  header h1{font-size:30px;letter-spacing:2px;background:linear-gradient(90deg,var(--acc),var(--purple),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  header .sub{color:var(--tx2);margin-top:8px;font-size:14px}
+  .statline{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:16px 0 26px}
+  .statline span{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 14px;font-size:13px;color:var(--tx2)}
+  .statline b{color:var(--gold)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:18px}
+  .card h2{font-size:16px;margin-bottom:14px;color:var(--acc);display:flex;align-items:center;gap:8px}
+  .card h2::before{content:"";width:4px;height:16px;background:var(--acc);border-radius:2px}
+  .layers{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+  .layer{flex:1;min-width:150px}
+  .layer label{display:block;font-size:12px;color:var(--tx2);margin-bottom:6px}
+  .layer select{width:100%;background:var(--panel2);color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:15px;appearance:none}
+  .btns{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+  button{background:linear-gradient(90deg,var(--acc),var(--purple));color:#fff;border:none;border-radius:10px;padding:11px 20px;font-size:15px;cursor:pointer;font-weight:600}
+  button.ghost{background:var(--panel2);border:1px solid var(--line);color:var(--tx)}
+  button:hover{filter:brightness(1.1)}
+  input[type=text]{width:100%;background:var(--panel2);color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px}
+  .searchrow{display:flex;gap:8px}
+  .searchrow input{flex:1}
+  .searchrow button{white-space:nowrap}
+  /* 结果 */
+  .gua-title{font-size:22px;font-weight:700;margin-bottom:4px;color:var(--gold)}
+  .gua-id{color:var(--tx2);font-size:13px;margin-bottom:12px}
+  .seq{display:flex;gap:6px;justify-content:center;margin:10px 0}
+  .seq .grp{display:flex;gap:6px}
+  .seq .sep{color:var(--line);align-self:center;font-weight:700}
+  .yao{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#0f1220}
+  .yao.D{background:#6b7280}
+  .yao.R{background:#f5c97b}
+  .yao.T{background:#34d399}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .badge{font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid var(--line);color:var(--tx2);background:var(--panel2)}
+  .badge.warn{color:var(--red);border-color:var(--red)}
+  .badge.lvl{color:var(--gold);border-color:var(--gold)}
+  .section{margin-top:14px}
+  .section h3{font-size:14px;color:var(--acc2);margin-bottom:6px;border-left:3px solid var(--acc2);padding-left:8px}
+  .section p,.section li{color:var(--tx);font-size:14px;text-align:justify}
+  .section ul{padding-left:20px}
+  .analysis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+  .an-card{background:var(--panel2);border-radius:12px;padding:12px;text-align:center}
+  .an-card .n{font-size:26px;font-weight:800}
+  .an-card .l{font-size:12px;color:var(--tx2);margin-top:2px}
+  .an-card.R .n{color:var(--gold)} .an-card.D .n{color:#9ca3af} .an-card.T .n{color:var(--acc2)}
+  .balance{background:var(--panel2);border-radius:12px;padding:12px;margin-top:10px;font-size:13px;color:var(--tx)}
+  .balance li{margin-left:18px;margin-top:4px}
+  .table{width:100%;border-collapse:collapse;font-size:13px}
+  .table th,.table td{border:1px solid var(--line);padding:7px 8px;text-align:center}
+  .table th{background:var(--panel2);color:var(--acc);position:sticky;top:0}
+  .table tr:nth-child(even){background:rgba(255,255,255,.02)}
+  .dim{color:var(--tx2)}
+  .hint{color:var(--tx2);font-size:12px;margin-top:8px}
+  .spinner{text-align:center;padding:20px;color:var(--tx2)}
+  footer{text-align:center;color:var(--tx2);font-size:12px;margin-top:30px}
+  .flow{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:13px}
+  .flow .lbox{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:4px 10px;color:var(--tx2)}
+  .flow .lbox b{color:var(--tx)}
+  .flow .arr{color:var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>三元九维 · 19683 大模型</h1>
+    <div class="sub">三层（上·中·下）× 三爻 × 三态（D承载 / R判定 / T增益）＝ 3⁹ ＝ 19683 卦</div>
+    <div class="statline">
+      <span>总卦数 <b id="stTotal">…</b></span>
+      <span>层卦 <b id="stLayer">27</b></span>
+      <span>自适配最强 <b id="stTop">极强</b></span>
+    </div>
+  </header>
+
+  <div class="card">
+    <h2>起卦查询</h2>
+    <div class="layers">
+      <div class="layer"><label>上卦 · 大势</label><select id="selUp"></select></div>
+      <div class="layer"><label>中卦 · 枢纽</label><select id="selMid"></select></div>
+      <div class="layer"><label>下卦 · 底盘</label><select id="selLo"></select></div>
+    </div>
+    <div class="btns">
+      <button onclick="query()">查询此卦</button>
+      <button class="ghost" onclick="rand()">随机抽一卦</button>
+      <button class="ghost" onclick="gen()">规则解读</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>搜索</h2>
+    <div class="searchrow">
+      <input id="q" type="text" placeholder="输入 编号(如 7-1-2)、卦名关键词(如 全静)、或 9 爻序列(如 DDDRRRTTT)">
+      <button onclick="search()">搜索</button>
+    </div>
+    <div id="searchRes"></div>
+  </div>
+
+  <div class="card">
+    <h2>推理面板 · 动态推演 / 语义推导 / 确定性等级</h2>
+    <div class="hint" style="margin-bottom:10px">取当前起卦，由服务端实时完成「自下而上势能流推演 + 三态公理推导 + 确定性等级」。点击 9 爻中任一爻（循环 D/R/T）即可扰动演化，即时重算。</div>
+    <button onclick="runInfer()">推演 · 推导当前卦</button>
+    <button class="ghost" onclick="loadSuggest()" style="margin-left:8px">演化建议</button>
+    <button class="ghost" onclick="loadTrace()" style="margin-left:8px">演化路径</button>
+    <div id="infRes"></div>
+  </div>
+
+  <div id="result"></div>
+
+  <div class="card">
+    <h2>认知棋盘工作台 · 证伪 / 元评估 / 多Agent</h2>
+    <div class="hint" style="margin-bottom:10px">三元九维之上的「认知棋盘 v2」升级层：证伪学习闭环 / 元认知自省 / 多Agent共享协议，均可复算、可校验、可回放。</div>
+    <button onclick="proc('/api/cognition','证伪·学习闭环')">证伪·学习闭环</button>
+    <button class="ghost" onclick="proc('/api/agents','多Agent收敛')" style="margin-left:8px">多Agent收敛</button>
+    <button class="ghost" onclick="proc('/api/meta','元棋盘自省')" style="margin-left:8px">元棋盘自省</button>
+    <div id="procRes" style="margin-top:10px"></div>
+    <hr style="margin:16px 0;border:none;border-top:1px solid #e5e7eb">
+    <div style="font-weight:600;margin-bottom:6px">实时元评估器（前端确定性计算，不调服务）</div>
+    <div style="font-size:12px;color:#6b7280;margin-bottom:10px">勾选基元 + 拖置信度，实时看 状态价 / 自我矛盾 / M(X) 元评估 / 策略建议</div>
+    <div class="layers" style="flex-wrap:wrap">
+      <label style="display:flex;align-items:center;gap:5px;font-size:13px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:5px 9px;cursor:pointer"><input type="checkbox" id="mACT" checked onchange="calcMeta()"> ACT 激活</label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:13px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:5px 9px;cursor:pointer"><input type="checkbox" id="mGAT" checked onchange="calcMeta()"> GAT 门控</label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:13px;background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:5px 9px;cursor:pointer"><input type="checkbox" id="mSUS" checked onchange="calcMeta()"> SUS 悬置</label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:13px;background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:5px 9px;cursor:pointer"><input type="checkbox" id="mASS" checked onchange="calcMeta()"> ASS 主张</label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:13px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:5px 9px;cursor:pointer"><input type="checkbox" id="mREF" checked onchange="calcMeta()"> REF 反驳</label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:13px;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:8px;padding:5px 9px;cursor:pointer"><input type="checkbox" id="mVRF" onchange="calcMeta()"> VRF 校验</label>
+    </div>
+    <div style="margin:12px 0;font-size:13px">置信度
+      <input type="range" id="metaConf" min="0.1" max="1" step="0.05" value="0.9" style="width:55%;vertical-align:middle" oninput="calcMeta()">
+      <b id="metaConfV" style="color:var(--acc2)">0.90</b>
+    </div>
+    <div id="metaRes"></div>
+  </div>
+
+  <div class="card">
+    <h2>27 层卦规范表</h2>
+    <div style="overflow:auto;max-height:420px">
+      <table class="table" id="layerTable"><thead><tr><th>编号</th><th>名称</th><th>底·中·顶</th><th>判定</th><th>承载</th><th>增益</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <footer>三元九维19683体系 · 生成式推理模型 · 数据源自 729 份《全套27九爻卦》语料</footer>
+</div>
+
+<script>
+let LAYERS = []; let FULL = null;
+
+async function api(path){
+  const r = await fetch(path);
+  return r.json();
+}
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+async function init(){
+  const [layers, stats] = await Promise.all([api('/api/layers'), api('/api/stats')]);
+  LAYERS = Object.values(layers).sort((a,b)=>a['编号']-b['编号']);
+  // 选项
+  const mk = (sel, fn)=>LAYERS.forEach(l=>sel.add(new Option(l['编号'].toString().padStart(2,'0')+' · '+l['规范名称'], l['编号'])));
+  mk(document.getElementById('selUp'));
+  mk(document.getElementById('selMid'));
+  mk(document.getElementById('selLo'));
+  document.getElementById('selUp').value=14; document.getElementById('selMid').value=27; document.getElementById('selLo').value=1;
+  // 统计
+  document.getElementById('stTotal').textContent = stats['总卦数']||19683;
+  document.getElementById('stTop').textContent = '极强';
+  // 层卦表
+  const tb = document.querySelector('#layerTable tbody');
+  tb.innerHTML = LAYERS.map(l=>`<tr><td>${l['编号'].toString().padStart(2,'0')}</td><td>${l['规范名称']}</td><td>${l['规范三爻'].join('·')}</td><td>${l['判定数']}</td><td>${l['承载数']}</td><td>${l['增益数']}</td></tr>`).join('');
+}
+
+function yaoHTML(v){
+  return v.map(c=>`<div class="yao ${c}">${c}</div>`).join('');
+}
+
+function layerName(num, role, r){
+  // 优先用声明值名称（忠实原文）
+  const map = {上:'上卦',中:'中卦',下:'下卦'};
+  return r && r[map[role]] ? r[map[role]] : (LAYERS.find(l=>l['编号']==num)||{})['规范名称']||'';
+}
+
+function render(r, mode){
+  const a = r.analysis || {};
+  const warn = r['九爻一致']===false ? `<span class="badge warn">⚠ 原文九爻与规范表不一致：${esc(r['偏差说明']||'')}</span>` : '';
+  const lvl = r['自适配等级'] ? `<span class="badge lvl">自适配 · ${esc(r['自适配等级'])}</span>` : '';
+  const seqGrp = [
+    {role:'上',num:r['上编号'],v:r['九爻值'].slice(0,3),r},
+    {role:'中',num:r['中编号'],v:r['九爻值'].slice(3,6),r},
+    {role:'下',num:r['下编号'],v:r['九爻值'].slice(6,9),r},
+  ];
+  const flow = seqGrp.map(g=>`<span class="lbox"><b>${g.role}</b>${g.num.toString().padStart(2,'0')}·${layerName(g.num,g.role,r)}</span>`).join('<span class="arr">→</span>');
+  const div = r['分层拆解']||[];
+  return `
+    <div class="card">
+      <div class="gua-title">${esc(r['复合卦名']||'(卦)')}</div>
+      <div class="gua-id">九爻编号 ${esc(r['九爻编号']||'')}${mode==='gen'?' · 规则生成解读':''}</div>
+      <div class="flow">${flow}</div>
+      <div class="seq">
+        <div class="grp">${yaoHTML(r['九爻值'].slice(0,3))}</div><span class="sep">｜</span>
+        <div class="grp">${yaoHTML(r['九爻值'].slice(3,6))}</div><span class="sep">｜</span>
+        <div class="grp">${yaoHTML(r['九爻值'].slice(6,9))}</div>
+      </div>
+      <div class="badges">
+        <span class="badge">判定 ${r['判定数']}</span>
+        <span class="badge">承载 ${r['承载数']}</span>
+        <span class="badge">增益 ${r['增益数']}</span>
+        ${lvl}${warn}
+      </div>
+      <div class="analysis-grid">
+        <div class="an-card R"><div class="n">${r['判定数']}</div><div class="l">判定 R</div></div>
+        <div class="an-card D"><div class="n">${r['承载数']}</div><div class="l">承载 D</div></div>
+        <div class="an-card T"><div class="n">${r['增益数']}</div><div class="l">增益 T</div></div>
+      </div>
+      ${r['复合卦总释']?`<div class="section"><h3>复合卦总释</h3><p>${esc(r['复合卦总释'])}</p></div>`:''}
+      ${(div&&div.length)?`<div class="section"><h3>分层拆解</h3><ul>${div.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
+      ${r['跨层制衡']?`<div class="section"><h3>跨层制衡</h3><p>${esc(r['跨层制衡'])}</p></div>`:''}
+      ${r['自适配评估']?`<div class="section"><h3>全局自适配评估</h3><p>${esc(r['自适配评估'])}</p></div>`:''}
+      ${(r['演化路径']&&Object.keys(r['演化路径']).length)?`<div class="section"><h3>演化路径</h3><ul>${Object.entries(r['演化路径']).map(([k,v])=>`<li><b>${k}：</b>${esc(v)}</li>`).join('')}</ul></div>`:''}
+      ${(r['逐层'])?`<div class="section"><h3>逐层规则解读</h3><div style="white-space:pre-wrap;font-size:13px;color:var(--tx)">${esc(r['逐层'])}</div></div>`:''}
+      ${(r['制衡要点'])?`<div class="section"><h3>制衡要点</h3><ul>${String(r['制衡要点']).split('\n').filter(Boolean).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
+    </div>`;
+}
+
+async function query(){
+  const shang=+document.getElementById('selUp').value, zhong=+document.getElementById('selMid').value, xia=+document.getElementById('selLo').value;
+  document.getElementById('result').innerHTML = `<div class="spinner">载入中…</div>`;
+  const r = await api(`/api/gua?shang=${shang}&zhong=${zhong}&xia=${xia}`);
+  document.getElementById('result').innerHTML = render(r, 'gua');
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+async function gen(){
+  const shang=+document.getElementById('selUp').value, zhong=+document.getElementById('selMid').value, xia=+document.getElementById('selLo').value;
+  const r = await api(`/api/generate?shang=${shang}&zhong=${zhong}&xia=${xia}`);
+  // 组装为渲染对象
+  const obj = {
+    '复合卦名':'（规则生成）'+shang+'·'+zhong+'·'+xia,
+    '九爻编号':[shang,zhong,xia].map(x=>String(x).padStart(2,'0')).join('｜'),
+    '上编号':shang,'中编号':zhong,'下编号':xia,
+    '九爻值':r['九爻'].split(''),
+    '判定数':(r['判定/承载/增益']||'0/0/0').split('/')[0],
+    '承载数':(r['判定/承载/增益']||'0/0/0').split('/')[1],
+    '增益数':(r['判定/承载/增益']||'0/0/0').split('/')[2],
+    '自适配等级':r['自适配等级'],
+    '复合卦总释':r['构型'],
+    '逐层':r['逐层'],
+    '制衡要点':r['制衡要点'],
+    '九爻一致':true
+  };
+  document.getElementById('result').innerHTML = render(obj,'gen');
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+async function rand(){
+  document.getElementById('result').innerHTML = `<div class="spinner">抽卦中…</div>`;
+  const r = await api('/api/random');
+  document.getElementById('result').innerHTML = render(r,'gua');
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+async function search(){
+  const q = document.getElementById('q').value.trim();
+  if(!q) return;
+  const res = await api('/api/search?q='+encodeURIComponent(q));
+  const box = document.getElementById('searchRes');
+  if(!res.length){ box.innerHTML = `<div class="hint">未找到匹配结果。</div>`; return; }
+  box.innerHTML = `<div style="margin-top:10px">${res.map(r=>`
+    <div style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-top:6px;cursor:pointer" onclick='openGua(${r['上编号']},${r['中编号']},${r['下编号']})'>
+      <b>${esc(r['九爻编号'])}</b> · ${esc(r['复合卦名'])} <span class="dim">（自适配 ${esc(r['自适配等级'])}）</span>
+    </div>`).join('')}</div>`;
+}
+async function openGua(s,m,x){
+  document.getElementById('result').innerHTML = `<div class="spinner">载入中…</div>`;
+  const r = await api(`/api/gua?shang=${s}&zhong=${m}&xia=${x}`);
+  document.getElementById('result').innerHTML = render(r,'gua');
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+
+/* ---- 推理面板：动态推演 / 语义推导 / 确定性等级 ---- */
+let CURSEQ = null;  // 当前 9 爻（上+中+下）
+function cv(n){ let o=[],x=n-1; for(let k=0;k<3;k++){ o.push(['D','R','T'][x%3]); x=Math.floor(x/3); } return o.reverse().join(''); }
+async function runInfer(){
+  const shang=+document.getElementById('selUp').value, zhong=+document.getElementById('selMid').value, xia=+document.getElementById('selLo').value;
+  CURSEQ = (cv(shang)+cv(zhong)+cv(xia)).split('');
+  await loadDerive();
+  document.getElementById('infRes').scrollIntoView({behavior:'smooth'});
+}
+async function loadDerive(){
+  const box = document.getElementById('infRes');
+  box.innerHTML = `<div class="spinner">推演中…</div>`;
+  const d = await api('/api/derive9?seq='+CURSEQ.join(''));
+  box.innerHTML = renderDerive(d);
+}
+function renderDerive(d){
+  const s = d['构型'], flow = d['推演'], inf = d['推导'];
+  const NAMES = ['下底层','下中位','下顶层','中底层','中中位','中顶层','上底层','上中位','上顶层'];
+  const col = {D:'#6b7280', R:'#f5c97b', T:'#34d399'};
+  const kind = {D:'承载', R:'判定', T:'增益'};
+  const rows = flow['势能流'].map((nd,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;background:var(--panel2);border-left:4px solid ${col[nd.c]};border-radius:8px;padding:6px 10px;margin-top:5px;cursor:pointer" onclick="tapYao(${i})" title="点击切换 D/R/T">
+      <div style="width:34px;height:34px;border-radius:8px;background:${col[nd.c]};color:#0f1220;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex:none">${nd.c}</div>
+      <div style="flex:1;font-size:12px;color:var(--tx2)">${NAMES[i]} · ${kind[nd.c]}</div>
+      <div style="font-size:11px;color:var(--tx2);text-align:right">出 <b style="color:var(--acc2)">${nd.out}</b> · 留 <b style="color:var(--gold)">${nd.hold}</b></div>
+    </div>`).join('');
+  const cons = Array.isArray(inf['关键制约']) ? inf['关键制约'].join('；') : inf['关键制约'];
+  return `
+    <div style="margin-top:12px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px">
+        <span class="badge lvl">构型 ${esc(s)}</span>
+        <span class="badge lvl">自适配 · ${esc(d['自适配等级'])}</span>
+        <span class="badge">判定/承载/增益 ${flow['判定承载增益'].join('/')}</span>
+      </div>
+      <div class="section"><h3>语义推导 · 三态公理</h3>
+        <div class="balance">
+          <li><b>底层势能：</b>${esc(inf['底层势能'])}</li>
+          <li><b>层间传递：</b>${esc(inf['层间传递'].join('；'))}</li>
+          <li><b>上层输出：</b><span style="color:var(--acc2)">${esc(inf['上层输出'])}</span></li>
+          <li><b>关键制约：</b><span style="color:var(--gold)">${esc(cons)}</span></li>
+        </div>
+      </div>
+      <div class="section"><h3>动态推演 · 势能流（自下而上）</h3>${rows}
+        <div style="display:flex;gap:14px;margin-top:8px;font-size:13px">
+          <span>最终输出 <b style="color:var(--acc2)">${flow['最终输出']}</b></span>
+          <span>累计滞留 <b style="color:var(--gold)">${flow['累计滞留']}</b></span>
+        </div>
+      </div>
+      <div class="hint">点击上方任一爻（D/R/T 循环）即扰动演化，推演与推导实时重算。</div>
+    </div>`;
+}
+function tapYao(k){
+  // k = 展示行(下→中→上) 索引 → 原 seq(上+中+下) 索引
+  const buIdx = [6,7,8,3,4,5,0,1,2];
+  const i = buIdx[k];
+  const cur = CURSEQ[i];
+  CURSEQ[i] = cur==='D' ? 'R' : (cur==='R' ? 'T' : 'D');
+  loadDerive();
+}
+
+/* ---- 演化建议（服务端确定性穷举） ---- */
+async function loadSuggest(){
+  const box = document.getElementById('infRes');
+  const shang=+document.getElementById('selUp').value, zhong=+document.getElementById('selMid').value, xia=+document.getElementById('selLo').value;
+  box.innerHTML = `<div class="spinner">求演化建议…</div>`;
+  const d = await api(`/api/suggest?shang=${shang}&zhong=${zhong}&xia=${xia}&top=3`);
+  box.innerHTML = `
+    <div style="margin-top:12px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px">
+        <span class="badge lvl">构型 ${esc(d['构型'])}</span>
+        <span class="badge lvl">原自适配 · ${esc(d['原自适配'])}</span>
+        <span class="badge">原顶层输出 ${d['原顶层输出']}</span>
+        <span class="badge">方向 · ${esc(d['方向'])}</span>
+      </div>
+      <div class="section"><h3>最优演化建议（确定性穷举）</h3>
+        <div class="balance">${d['演化建议'].map(s=>`
+          <li><b>改${s['爻位']}爻 ${s['原爻']}→${s['改爻值']}：</b>等级 ${esc(s['等级变化'])}${s['等级提升']?'（↑提升）':''} · 输出 ${s['输出变化']>0?'+':''}${s['输出变化']}${s['输出提升']?'（↑提升）':''}</li>`).join('')}
+        </div>
+        <div class="hint">依据确定性等级签名与自下而上势能流，穷举全部单爻改动后取最优；点击上方「推演·推导当前卦」可对任意爻再扰动演化。</div>
+      </div>
+    </div>`;
+  box.scrollIntoView({behavior:'smooth'});
+}
+
+/* ---- 演化路径（服务端时序推导：顺势 + 干预轨迹） ---- */
+async function loadTrace(){
+  const box = document.getElementById('infRes');
+  const shang=+document.getElementById('selUp').value, zhong=+document.getElementById('selMid').value, xia=+document.getElementById('selLo').value;
+  box.innerHTML = `<div class="spinner">推导演化路径…</div>`;
+  const d = await api(`/api/trace?shang=${shang}&zhong=${zhong}&xia=${xia}&steps=4`);
+  const steps = d['干预演化轨迹'].map(t=>`
+    <li style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:5px">
+      <b style="color:var(--acc2)">step${t['步']}</b>
+      <span class="dim">${esc(t['改动'])}</span>
+      <span class="badge">${esc(t['构型'])}</span>
+      <span class="badge lvl">${esc(t['自适配'])}</span>
+      <span class="dim">输出 ${t['顶层输出']}</span>
+    </li>`).join('');
+  box.innerHTML = `
+    <div style="margin-top:12px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px">
+        <span class="badge lvl">构型 ${esc(d['构型'])}</span>
+        <span class="badge">顺势 · ${esc(d['顺势演化']['倾向'])}</span>
+        <span class="badge">方向 · 增强</span>
+      </div>
+      <div class="section"><h3>顺势演化（不加干预）</h3><p>${esc(d['顺势演化']['描述'])}</p></div>
+      <div class="section"><h3>干预演化轨迹（贪心逐代增强）</h3><ul style="padding-left:18px">${steps}</ul>
+        <div class="hint">每代取确定性最优单爻改动，由「${esc(d['顺势演化']['倾向'])}」逐步演化；轨迹数值与 /api/trace 一致。</div>
+      </div>
+    </div>`;
+  box.scrollIntoView({behavior:'smooth'});
+}
+
+/* ---- 认知棋盘工作台：三合一流程演示（调服务端） ---- */
+async function proc(path, title){
+  const box = document.getElementById('procRes');
+  box.innerHTML = `<div class="spinner">运行${title}…</div>`;
+  const d = await api(path);
+  box.innerHTML = `
+    <div class="section"><h3>${title}</h3>
+      <pre style="white-space:pre-wrap;font-size:12px;line-height:1.7;background:#0f172a;color:#d1fae5;border-radius:8px;padding:12px;max-height:420px;overflow:auto;margin:0">${esc(d['流程'])}</pre>
+    </div>`;
+  box.scrollIntoView({behavior:'smooth'});
+}
+
+/* ---- 实时元评估器（前端确定性计算，与 meta_board 同源逻辑） ---- */
+function calcMeta(){
+  const prim={};
+  ['ACT','GAT','SUS','ASS','REF','VRF'].forEach(k=>{ prim[k]=document.getElementById('m'+k).checked?1.0:0; });
+  const conf=+document.getElementById('metaConf').value;
+  document.getElementById('metaConfV').textContent=conf.toFixed(2);
+  const cons=[];
+  if(prim.ASS>0&&prim.REF>0) cons.push('ASS(主张)与REF(反驳)并存');
+  if(prim.GAT>0&&prim.SUS>0) cons.push('GAT(门控)与SUS(悬置)并存');
+  const health=+(1-0.3*cons.length).toFixed(3);
+  const inflated=conf>0.7&&(cons.length>0||prim.SUS>0);
+  const unsupported=prim.ASS>0&&prim.ACT===0&&prim.VRF===0;
+  const determinacy=+(1-Math.min(0.5,prim.SUS)).toFixed(3);
+  const stscore=+(health*conf*determinacy).toFixed(3);
+  const risks=[];
+  if(cons.length) risks.push('结构矛盾×'+cons.length);
+  if(prim.SUS>0) risks.push('未决悬置');
+  if(unsupported) risks.push('无源主张');
+  if(inflated) risks.push('置信度虚高');
+  const adv=[];
+  if(inflated) adv.push('下调置信度·补校验(VRF)');
+  if(unsupported) adv.push('降权断言·补激活/校验');
+  if(cons.length) adv.push('分裂或降权冲突基元');
+  if(!adv.length) adv.push(conf<0.5?'证据充分可上调置信度':'结构健康，维持');
+  const box=document.getElementById('metaRes');
+  box.innerHTML=`
+    <div class="balance">
+      <span class="badge lvl">状态价 ${stscore}</span>
+      <span class="badge">健康度 ${health}</span>
+      <span class="badge">置信度 ${conf.toFixed(2)}</span>
+      <span class="badge">${inflated?'⚠ 置信度虚高':'置信度合理'}</span>
+    </div>
+    ${cons.length?`<div class="section"><h3>自我矛盾（内源反例）</h3><ul style="padding-left:18px">${cons.map(x=>esc(x)).map(x=>`<li>${x}</li>`).join('')}</ul></div>`:''}
+    <div class="section"><h3>M(X) 元评估</h3>
+      <div class="hint">风险：${risks.length?risks.map(x=>esc(x)).join('、'):'无（结构健康）'}</div>
+      <div class="hint">策略建议：${adv.map(x=>esc(x)).join('；')}</div>
+    </div>`;
+}
+
+document.getElementById('q').addEventListener('keydown',e=>{ if(e.key==='Enter') search(); });
+init();
+calcMeta();
+</script>
+</body>
+</html>

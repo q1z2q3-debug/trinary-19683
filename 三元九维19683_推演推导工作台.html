@@ -1,0 +1,127 @@
+<html style="margin:0;padding:0;">
+<title>三元九维19683 · 推演·推导工作台</title>
+<div id="app" style="width:100%;box-sizing:border-box;background:#0d1117;color:#e6edf3;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:14px 12px 26px;">
+  <div style="font-size:20px;font-weight:800;letter-spacing:1px;color:#58a6ff;">三元九维19683 · 推演·推导工作台</div>
+  <div style="font-size:11px;color:#8b949e;margin-top:4px;">动态推演(数值势能流，自下而上) · 语义推导(三态公理) · 确定性等级 —— 单文件离线可用，点任一位爻循环 D/R/T 实时重算</div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px;">
+    <label style="font-size:12px;color:#8b949e;">上</label><select id="selU" style="background:#161b22;color:#e6edf3;border:1px solid #30363d;border-radius:8px;padding:8px;font-size:14px;min-width:92px;"></select>
+    <label style="font-size:12px;color:#8b949e;">中</label><select id="selM" style="background:#161b22;color:#e6edf3;border:1px solid #30363d;border-radius:8px;padding:8px;font-size:14px;min-width:92px;"></select>
+    <label style="font-size:12px;color:#8b949e;">下</label><select id="selL" style="background:#161b22;color:#e6edf3;border:1px solid #30363d;border-radius:8px;padding:8px;font-size:14px;min-width:92px;"></select>
+    <button id="btnR" style="background:#58a6ff;color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;min-height:44px;">恢复</button>
+    <button id="btnSug" style="background:#2ea043;color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;min-height:44px;">演化建议</button>
+  </div>
+  <div style="margin-top:10px;background:#161b22;border:1px solid #30363d;border-radius:10px;padding:8px 12px;font-size:13px;display:flex;flex-wrap:wrap;gap:8px 18px;">
+    <span>构型 <b id="gC" style="color:#e6edf3;">-</b></span>
+    <span>判定/承载/增益 <b id="gR" style="color:#f5c97b;">-</b></span>
+    <span>自适配 <b id="gL" style="color:#a78bfa;">-</b></span>
+  </div>
+  <div style="font-size:13px;font-weight:700;color:#58a6ff;margin-top:14px;">① 动态推演 · 势能流（底层 → 顶层）</div>
+  <div id="chain" style="margin-top:8px;"></div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;font-size:12px;">
+    <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:8px 12px;">最终输出 <b id="gOut" style="color:#3fb950;font-size:16px;">-</b></div>
+    <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:8px 12px;">总滞留 <b id="gHold" style="color:#f5c97b;">-</b></div>
+  </div>
+  <div style="font-size:13px;font-weight:700;color:#58a6ff;margin-top:16px;">② 语义推导 · 三态公理</div>
+  <div style="margin-top:8px;background:#161b22;border:1px solid #30363d;border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.9;">
+    <div style="display:flex;gap:8px;"><b style="color:#58a6ff;flex:none;width:74px;">底层势能</b><div id="dSrc" style="color:#c9d1d9;flex:1;">-</div></div>
+    <div style="display:flex;gap:8px;"><b style="color:#58a6ff;flex:none;width:74px;">层间传递</b><div id="dTr" style="color:#c9d1d9;flex:1;">-</div></div>
+    <div style="display:flex;gap:8px;"><b style="color:#3fb950;flex:none;width:74px;">上层输出</b><div id="dOut" style="color:#3fb950;flex:1;">-</div></div>
+    <div style="display:flex;gap:8px;"><b style="color:#f5c97b;flex:none;width:74px;">关键制约</b><div id="dCons" style="color:#f5c97b;flex:1;">-</div></div>
+  </div>
+  <div id="sugRes" style="margin-top:12px;"></div>
+  <div style="font-size:10px;color:#6a7190;margin-top:10px;line-height:1.6;">数值流参数(体系示意)：D离×0.60/滞×0.40、R离×0.75/滞×0.25、T离×2.00+0.30自激；语义由确定性三态公理(削减/审定/放大)推导；等级为 5 维签名查表(level9，全库100%一致)。不依赖语料正文，任意构型自洽可复算。</div>
+</div>
+<script>
+(function(){
+try{
+  var SIG={"hasR,hasR,0,2,False":"极弱","hasR,hasR,0,3,False":"极弱","hasR,hasR,0,4,False":"弱","hasR,hasR,0,5,False":"弱","hasR,hasR,0,6,False":"弱","hasR,hasR,0,7,False":"中等","hasR,hasR,0,8,False":"中等偏弱","hasR,hasR,0,9,False":"极强","hasR,hasR,1,2,False":"极弱","hasR,hasR,1,3,False":"弱","hasR,hasR,1,4,False":"弱","hasR,hasR,1,5,False":"弱","hasR,hasR,1,6,False":"中等","hasR,hasR,1,7,False":"较强","hasR,hasR,1,8,False":"较强","hasR,hasR,2,2,False":"弱","hasR,hasR,2,3,False":"弱","hasR,hasR,2,4,False":"中等","hasR,hasR,2,5,False":"中等","hasR,hasR,2,6,False":"较强","hasR,hasR,2,7,False":"较强","hasR,hasR,3,2,False":"弱","hasR,hasR,3,3,False":"中等","hasR,hasR,3,4,False":"中等","hasR,hasR,3,5,False":"较强","hasR,hasR,3,6,False":"较强","hasR,hasT,1,1,False":"极弱","hasR,hasT,1,2,False":"极弱","hasR,hasT,1,3,False":"弱","hasR,hasT,1,4,False":"弱","hasR,hasT,1,5,False":"弱","hasR,hasT,1,6,False":"中等","hasR,hasT,1,7,False":"较强","hasR,hasT,1,8,False":"较强","hasR,hasT,2,1,False":"弱","hasR,hasT,2,2,False":"弱","hasR,hasT,2,3,False":"弱","hasR,hasT,2,4,False":"中等","hasR,hasT,2,5,False":"中等","hasR,hasT,2,6,False":"较强","hasR,hasT,2,7,False":"较强","hasR,hasT,3,1,False":"极弱","hasR,hasT,3,2,False":"弱","hasR,hasT,3,3,False":"中等","hasR,hasT,3,4,False":"中等","hasR,hasT,3,5,False":"较强","hasR,hasT,3,6,False":"较强","hasR,hasT,4,1,False":"极弱","hasR,hasT,4,2,False":"中等","hasR,hasT,4,3,False":"中等","hasR,hasT,4,4,False":"较强","hasR,hasT,4,5,False":"较强","hasR,hasT,5,1,False":"极弱","hasR,hasT,5,2,False":"中等","hasR,hasT,5,3,False":"较强","hasR,hasT,5,4,False":"较强","hasR,hasT,6,1,False":"强","hasR,hasT,6,2,False":"强","hasR,hasT,6,3,False":"较强","hasR,pureD,0,1,False":"极弱","hasR,pureD,0,2,False":"极弱","hasR,pureD,0,3,False":"极弱","hasR,pureD,0,4,False":"弱","hasR,pureD,0,5,False":"弱","hasR,pureD,0,6,False":"弱","hasR,pureD,1,1,False":"极弱","hasR,pureD,1,2,False":"极弱","hasR,pureD,1,3,False":"弱","hasR,pureD,1,4,False":"弱","hasR,pureD,1,5,False":"弱","hasR,pureD,2,1,False":"弱","hasR,pureD,2,2,False":"弱","hasR,pureD,2,3,False":"弱","hasR,pureD,2,4,False":"中等","hasR,pureD,3,1,False":"极弱","hasR,pureD,3,2,False":"弱","hasR,pureD,3,3,False":"中等","hasT,hasR,1,1,False":"极弱","hasT,hasR,1,1,True":"极弱","hasT,hasR,1,2,False":"极弱","hasT,hasR,1,2,True":"极弱","hasT,hasR,1,3,False":"弱","hasT,hasR,1,3,True":"弱","hasT,hasR,1,4,False":"弱","hasT,hasR,1,4,True":"弱","hasT,hasR,1,5,False":"弱","hasT,hasR,1,5,True":"弱","hasT,hasR,1,6,False":"中等","hasT,hasR,1,6,True":"中等","hasT,hasR,1,7,False":"较强","hasT,hasR,1,7,True":"较强","hasT,hasR,1,8,False":"较强","hasT,hasR,1,8,True":"较强","hasT,hasR,2,1,False":"弱","hasT,hasR,2,1,True":"弱","hasT,hasR,2,2,False":"弱","hasT,hasR,2,2,True":"弱","hasT,hasR,2,3,False":"弱","hasT,hasR,2,3,True":"弱","hasT,hasR,2,4,False":"中等","hasT,hasR,2,4,True":"中等","hasT,hasR,2,5,False":"中等","hasT,hasR,2,5,True":"中等","hasT,hasR,2,6,False":"较强","hasT,hasR,2,6,True":"较强","hasT,hasR,2,7,False":"较强","hasT,hasR,2,7,True":"较强","hasT,hasR,3,1,False":"极弱","hasT,hasR,3,1,True":"极弱","hasT,hasR,3,2,False":"弱","hasT,hasR,3,2,True":"弱","hasT,hasR,3,3,False":"中等","hasT,hasR,3,3,True":"中等","hasT,hasR,3,4,False":"中等","hasT,hasR,3,4,True":"中等","hasT,hasR,3,5,False":"较强","hasT,hasR,3,5,True":"较强","hasT,hasR,3,6,False":"较强","hasT,hasR,3,6,True":"较强","hasT,hasR,4,1,False":"极弱","hasT,hasR,4,1,True":"极弱","hasT,hasR,4,2,False":"中等","hasT,hasR,4,2,True":"中等","hasT,hasR,4,3,False":"中等","hasT,hasR,4,3,True":"中等","hasT,hasR,4,4,False":"较强","hasT,hasR,4,4,True":"较强","hasT,hasR,4,5,False":"较强","hasT,hasR,4,5,True":"较强","hasT,hasR,5,1,False":"极弱","hasT,hasR,5,1,True":"极弱","hasT,hasR,5,2,False":"中等","hasT,hasR,5,2,True":"中等","hasT,hasR,5,3,False":"较强","hasT,hasR,5,3,True":"较强","hasT,hasR,5,4,False":"较强","hasT,hasR,5,4,True":"较强","hasT,hasR,6,1,True":"强","hasT,hasR,6,2,True":"强","hasT,hasR,6,3,True":"较强","hasT,hasT,2,0,False":"极弱","hasT,hasT,2,0,True":"极弱","hasT,hasT,2,1,False":"弱","hasT,hasT,2,1,True":"弱","hasT,hasT,2,2,False":"弱","hasT,hasT,2,2,True":"弱","hasT,hasT,2,3,False":"弱","hasT,hasT,2,3,True":"弱","hasT,hasT,2,4,False":"中等","hasT,hasT,2,4,True":"中等","hasT,hasT,2,5,False":"中等","hasT,hasT,2,5,True":"中等","hasT,hasT,2,6,False":"较强","hasT,hasT,2,6,True":"较强","hasT,hasT,2,7,False":"较强","hasT,hasT,2,7,True":"较强","hasT,hasT,3,0,False":"极弱","hasT,hasT,3,0,True":"极弱","hasT,hasT,3,1,False":"极弱","hasT,hasT,3,1,True":"极弱","hasT,hasT,3,2,False":"弱","hasT,hasT,3,2,True":"弱","hasT,hasT,3,3,False":"中等","hasT,hasT,3,3,True":"中等","hasT,hasT,3,4,False":"中等","hasT,hasT,3,4,True":"中等","hasT,hasT,3,5,False":"较强","hasT,hasT,3,5,True":"较强","hasT,hasT,3,6,False":"较强","hasT,hasT,3,6,True":"较强","hasT,hasT,4,0,False":"极弱","hasT,hasT,4,0,True":"极弱","hasT,hasT,4,1,False":"极弱","hasT,hasT,4,1,True":"极弱","hasT,hasT,4,2,False":"中等","hasT,hasT,4,2,True":"中等","hasT,hasT,4,3,False":"中等","hasT,hasT,4,3,True":"中等","hasT,hasT,4,4,False":"较强","hasT,hasT,4,4,True":"较强","hasT,hasT,4,5,False":"较强","hasT,hasT,4,5,True":"较强","hasT,hasT,5,0,False":"极弱","hasT,hasT,5,0,True":"极弱","hasT,hasT,5,1,False":"极弱","hasT,hasT,5,1,True":"极弱","hasT,hasT,5,2,False":"中等","hasT,hasT,5,2,True":"中等","hasT,hasT,5,3,False":"较强","hasT,hasT,5,3,True":"较强","hasT,hasT,5,4,False":"较强","hasT,hasT,5,4,True":"较强","hasT,hasT,6,0,False":"极弱","hasT,hasT,6,0,True":"极弱","hasT,hasT,6,1,False":"强","hasT,hasT,6,1,True":"强","hasT,hasT,6,2,False":"强","hasT,hasT,6,2,True":"强","hasT,hasT,6,3,False":"较强","hasT,hasT,6,3,True":"较强","hasT,hasT,7,0,False":"强","hasT,hasT,7,0,True":"强","hasT,hasT,7,1,False":"强","hasT,hasT,7,1,True":"强","hasT,hasT,7,2,False":"极强","hasT,hasT,7,2,True":"极强","hasT,hasT,8,0,False":"极强","hasT,hasT,8,0,True":"极强","hasT,hasT,8,1,False":"极强","hasT,hasT,8,1,True":"极强","hasT,hasT,9,0,True":"极强","hasT,pureD,1,0,False":"极弱","hasT,pureD,1,0,True":"极弱","hasT,pureD,1,1,False":"极弱","hasT,pureD,1,1,True":"极弱","hasT,pureD,1,2,False":"极弱","hasT,pureD,1,2,True":"极弱","hasT,pureD,1,3,False":"弱","hasT,pureD,1,3,True":"弱","hasT,pureD,1,4,False":"弱","hasT,pureD,1,4,True":"弱","hasT,pureD,1,5,False":"弱","hasT,pureD,1,5,True":"弱","hasT,pureD,2,0,False":"极弱","hasT,pureD,2,0,True":"极弱","hasT,pureD,2,1,False":"弱","hasT,pureD,2,1,True":"弱","hasT,pureD,2,2,False":"弱","hasT,pureD,2,2,True":"弱","hasT,pureD,2,3,False":"弱","hasT,pureD,2,3,True":"弱","hasT,pureD,2,4,False":"中等","hasT,pureD,2,4,True":"中等","hasT,pureD,3,0,False":"极弱","hasT,pureD,3,0,True":"极弱","hasT,pureD,3,1,False":"极弱","hasT,pureD,3,1,True":"极弱","hasT,pureD,3,2,False":"弱","hasT,pureD,3,2,True":"弱","hasT,pureD,3,3,False":"中等","hasT,pureD,3,3,True":"中等","hasT,pureD,4,0,False":"极弱","hasT,pureD,4,0,True":"极弱","hasT,pureD,4,1,False":"极弱","hasT,pureD,4,1,True":"极弱","hasT,pureD,4,2,False":"中等","hasT,pureD,4,2,True":"中等","hasT,pureD,5,0,False":"极弱","hasT,pureD,5,0,True":"极弱","hasT,pureD,5,1,False":"极弱","hasT,pureD,5,1,True":"极弱","hasT,pureD,6,0,True":"极弱","pureD,hasR,0,1,False":"极弱","pureD,hasR,0,2,False":"极弱","pureD,hasR,0,3,False":"极弱","pureD,hasR,0,4,False":"弱","pureD,hasR,0,5,False":"弱","pureD,hasR,0,6,False":"弱","pureD,hasR,1,1,False":"极弱","pureD,hasR,1,2,False":"极弱","pureD,hasR,1,3,False":"弱","pureD,hasR,1,4,False":"弱","pureD,hasR,1,5,False":"弱","pureD,hasR,2,1,False":"弱","pureD,hasR,2,2,False":"弱","pureD,hasR,2,3,False":"弱","pureD,hasR,2,4,False":"中等","pureD,hasR,3,1,False":"极弱","pureD,hasR,3,2,False":"弱","pureD,hasR,3,3,False":"中等","pureD,hasT,1,0,False":"极弱","pureD,hasT,1,1,False":"极弱","pureD,hasT,1,2,False":"极弱","pureD,hasT,1,3,False":"弱","pureD,hasT,1,4,False":"弱","pureD,hasT,1,5,False":"弱","pureD,hasT,2,0,False":"极弱","pureD,hasT,2,1,False":"弱","pureD,hasT,2,2,False":"弱","pureD,hasT,2,3,False":"弱","pureD,hasT,2,4,False":"中等","pureD,hasT,3,0,False":"极弱","pureD,hasT,3,1,False":"极弱","pureD,hasT,3,2,False":"弱","pureD,hasT,3,3,False":"中等","pureD,hasT,4,0,False":"极弱","pureD,hasT,4,1,False":"极弱","pureD,hasT,4,2,False":"中等","pureD,hasT,5,0,False":"极弱","pureD,hasT,5,1,False":"极弱","pureD,hasT,6,0,False":"极弱","pureD,pureD,0,0,False":"极弱","pureD,pureD,0,1,False":"极弱","pureD,pureD,0,2,False":"极弱","pureD,pureD,0,3,False":"极弱","pureD,pureD,1,0,False":"极弱","pureD,pureD,1,1,False":"极弱","pureD,pureD,1,2,False":"极弱","pureD,pureD,2,0,False":"极弱","pureD,pureD,2,1,False":"弱","pureD,pureD,3,0,False":"极弱"};
+  function lvl(s){var up=s.slice(0,3),lo=s.slice(6,9);var upc=up.indexOf('T')>=0?'hasT':(up.indexOf('R')>=0?'hasR':'pureD');var loc=lo.indexOf('T')>=0?'hasT':(lo.indexOf('R')>=0?'hasR':'pureD');var nT=(s.match(/T/g)||[]).length,nR=(s.match(/R/g)||[]).length,topT=up[2]==='T'?'True':'False';return SIG[[upc,loc,nT,nR,topT].join(',')]||'弱';}
+  var LN={1:'厚藏',2:'待衡',3:'启生',4:'衡藏',5:'双衡',6:'启衡',7:'抑扬',8:'扬衡',9:'奋生',10:'基衡',11:'上下衡',12:'基启',13:'双衡藏',14:'全衡',15:'衡启',16:'抑衡',17:'扬双衡',18:'衡奋',19:'基扬抑',20:'基扬衡',21:'对扬',22:'基扬抑衡',23:'基扬双衡',24:'扬衡启',25:'奋抑',26:'奋衡',27:'全扬'};
+  function cv(n){var o=[],x=n-1;for(var k=0;k<3;k++){o.push(['D','R','T'][x%3]);x=Math.floor(x/3);}return o.reverse().join('');}
+  var COEF={D:.6,R:.75,T:2},SELF={D:0,R:0,T:.3};
+  var su=document.getElementById('selU'),sm=document.getElementById('selM'),sl=document.getElementById('selL');
+  function fill(s){for(var i=1;i<=27;i++){var o=document.createElement('option');o.value=i;o.text=i+'·'+LN[i];s.appendChild(o);}}
+  fill(su);fill(sm);fill(sl);su.value=14;sm.value=27;sl.value=1;
+  var seq=[];var chain=document.getElementById('chain');
+  function flow(s9){ // s9=下+中+上，从底层到顶层
+    var x=1.0,rows=[];
+    for(var i=0;i<9;i++){var c=s9[i],lv,hd,nt;
+      if(c==='T'){lv=x*COEF.T+SELF.T;hd=0;nt='放大'+(x<.001?'+自激':'');}
+      else if(c==='R'){lv=x*COEF.R;hd=x-lv;nt='放行';}
+      else{lv=x*COEF.D;hd=x-lv;nt='削减';}
+      rows.push({i:i,c:c,in:+(x).toFixed(4),out:+(lv).toFixed(4),hold:+(hd).toFixed(4),nt:nt});x=lv;
+    }
+    return {rows:rows,final:+(x).toFixed(4)};
+  }
+  var LAYN=['上','中','下'],POSN=['底层','中位','顶层'];
+  var AX={'D':{d:'D承载',a:'削减·封存·不读·不分辨·不回灌',c:'#58a6ff'},'R':{d:'R判定',a:'审定·挑拣·读信息·分辨·回灌',c:'#f5c97b'},'T':{d:'T增益',a:'放大·自激·生发·对外释放',c:'#3fb950'}};
+  function render(){
+    var s=seq.join('');var up=s.slice(0,3),mid=s.slice(3,6),lo=s.slice(6,9);
+    document.getElementById('gC').textContent=up+'｜'+mid+'｜'+lo;
+    document.getElementById('gR').textContent=(s.match(/R/g)||[]).length+'/'+(s.match(/D/g)||[]).length+'/'+(s.match(/T/g)||[]).length;
+    document.getElementById('gL').textContent=lvl(s);
+    // 自下而上数值流
+    var s9=lo+mid+up;var f=flow(s9);
+    document.getElementById('gOut').textContent=f.final;
+    document.getElementById('gHold').textContent=+(f.rows.reduce(function(a,r){return a+r.hold;},0)).toFixed(4);
+    chain.innerHTML='';
+    // 顶层→底层 展示（势能自下而上流至顶层输出）
+    var order=[2,1,0,5,4,3,8,7,6];
+    var idxmap=[6,7,8,3,4,5,0,1,2];
+    for(var k=0;k<9;k++){var i=order[k],c=s[i],col=AX[c].c,r=f.rows[idxmap[i]];
+      var d=document.createElement('div');d.style.cssText='display:flex;align-items:center;gap:10px;background:#161b22;border:1px solid #30363d;border-left:4px solid '+col+';border-radius:10px;padding:6px 10px;margin-bottom:5px;';
+      var b=document.createElement('button');b.textContent=c;b.style.cssText='width:44px;height:44px;min-height:44px;border-radius:9px;border:1px solid '+col+';background:rgba(0,0,0,.25);color:'+col+';font-size:18px;font-weight:800;flex:none;';
+      (function(ii){b.onclick=function(){var o=['D','R','T'];var ci=o.indexOf(seq[ii]);seq[ii]=o[(ci+1)%3];render();};})(i);
+      var info=document.createElement('div');info.style.cssText='flex:1;min-width:0;';
+      var lay=LAYN[Math.floor(i/3)],pos=POSN[i%3];
+      info.innerHTML='<div style="font-size:11px;color:#8b949e;">'+lay+pos+'·'+AX[c].d+'</div><div style="font-size:11px;color:#c9d1d9;">'+AX[c].a+'</div>';
+      var num=document.createElement('div');num.style.cssText='flex:none;font-size:11px;color:#8b949e;text-align:right;';
+      num.innerHTML='<span style="color:#3fb950;">出 '+r.out+'</span> · <span style="color:#f5c97b;">留 '+r.hold+'</span>';
+      d.appendChild(b);d.appendChild(info);d.appendChild(num);chain.appendChild(d);
+    }
+    // 语义推导
+    var src=lo.indexOf('T')>=0?'底层含增益单元，原生造能（自激）供给':(lo.indexOf('R')>=0?'底层含判定单元，以评估/管理驱动（依赖存量）':'底层纯承载，无自发扰动、无动能供给（零输入）');
+    document.getElementById('dSrc').textContent=src;
+    var tr=[];tr.push('底层势能 '+(lo.indexOf('T')>=0?'充足':(lo.indexOf('R')>=0?'有限':'为零'))+'，向上递送');
+    tr.push('中层'+(mid.indexOf('T')>=0||mid.indexOf('R')>=0?'含增益/判定·放大把关':'纯承载·纯削减')+'后上行');
+    tr.push('上层'+(up.indexOf('T')>=0?'释放/生发':(up.indexOf('R')>=0?'读而不放':'滞留锁界')));
+    document.getElementById('dTr').textContent=tr.join('；');
+    var out=up.indexOf('T')>=0?'对外释放（含增益通道，具备生发/释放能力）':(up.indexOf('R')>=0?'自知但不外放（能读能审定，成果滞留内域）':'滞留锁界（上层纯承载，不读不自知不释放）');
+    document.getElementById('dOut').textContent=out;
+    var cons=[];
+    if(up.indexOf('T')<0&&up.indexOf('R')<0)cons.push('上层无R无T——无读取/释放，成果滞留');
+    if(lo==='DDD')cons.push('底层无源——无原生动能，只处理既存量');
+    if(up.indexOf('T')>=0&&mid.indexOf('T')<0&&lo.indexOf('T')<0)cons.push('上T孤立——上游无造能与放大');
+    if(s.indexOf('R')<0)cons.push('全卦零判定——无把关');
+    if(s.indexOf('T')<0)cons.push('全卦零增益——无撬动与释放');
+    document.getElementById('dCons').textContent=cons.length?cons.join('；'):'无明显全局制约';
+  }
+  function load(){var u=+su.value,m=+sm.value,l=+sl.value;seq=(cv(u)+cv(m)+cv(l)).split('');render();}
+  su.onchange=load;sm.onchange=load;sl.onchange=load;document.getElementById('btnR').onclick=load;document.getElementById('btnSug').onclick=suggestOffline;
+  load();
+
+  var LVLORD={极弱:0,弱:1,较弱:2,中等偏弱:3,中等:4,中等偏上:5,较强:6,强:7,极强:8};
+  function suggestOffline(){
+    var s9=seq.join('');var baseLvl=lvl(s9);var baseOut=flow(s9.slice(6)+s9.slice(3,6)+s9.slice(0,3)).final;var baseIdx=LVLORD[baseLvl]||0;
+    var cands=[];
+    for(var i=0;i<9;i++)for(var k=0;k<3;k++){var c='DRT'[k];if(c===s9[i])continue;var s2=s9.split('');s2[i]=c;s2=s2.join('');cands.push({i:i,old:s9[i],new:c,lvl2:lvl(s2),out2:flow(s2.slice(6)+s2.slice(3,6)+s2.slice(0,3)).final});}
+    cands.sort(function(a,b){return ((LVLORD[b.lvl2]||0)-(LVLORD[a.lvl2]||0))||(b.out2-a.out2);});
+    var top=cands.slice(0,3);
+    var rows=top.map(function(c){var pos=['上','中','下'][Math.floor(c.i/3)]+['底','中','顶'][c.i%3];
+      var up=(LVLORD[c.lvl2]||0)>baseIdx;
+      return '<div style="display:flex;align-items:center;gap:10px;background:#161b22;border:1px solid #30363d;border-radius:10px;padding:8px 12px;margin-top:6px;font-size:12px;">'
+        +'<span style="color:#e6edf3;font-weight:700;flex:none;min-width:96px;">改'+pos+'爻 '+c.old+'→'+c.new+'</span>'
+        +'<span style="color:#a78bfa;flex:none;">等级 '+c.lvl2+(up?' <span style="color:#3fb950">↑提升</span>':'')+'</span>'
+        +'<span style="color:#8b949e;flex:1;text-align:right;">输出 '+(c.out2-baseOut>0?'+':'')+(c.out2-baseOut).toFixed(4)+(c.out2-baseOut>0?' <span style="color:#3fb950">↑</span>':'')+'</span>'
+        +'</div>';}).join('');
+    var el=document.getElementById('sugRes');
+    el.innerHTML='<div style="font-size:13px;font-weight:700;color:#58a6ff;">③ 演化建议 · 最优单爻改动（确定性穷举）</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;font-size:12px;">'
+      +'<span>原自适配 <b style="color:#a78bfa">'+baseLvl+'</b></span><span>原顶层输出 <b style="color:#3fb950">'+baseOut.toFixed(4)+'</b></span><span>方向 增强</span></div>'
+      +rows;
+  }
+
+}catch(e){var a=document.getElementById('app');if(a)a.innerHTML='<div style="padding:20px;color:#ff7b7b;">加载失败：'+(e&&e.message||e)+'</div>';}
+})();
+</script>
+</html>

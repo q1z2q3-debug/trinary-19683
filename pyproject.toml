@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trinary19683"
+version = "2.6.0"
+description = "三元九维19683认知体系：可复算、可证伪、可演化的确定性符号认知层（19683卦 + 证伪 + 元认知 + 多Agent）"
+readme = "README.pypi.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.8"
+authors = [{ name = "q1z2q3", email = "q1z2q3@126.com" }]
+keywords = [
+    "yijing", "iching", "trinary", "19683", "cognition",
+    "deterministic", "symbolic", "agent", "refutation", "meta-cognition",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.scripts]
+trinary-server = "server:main"
+trinary-demo = "cognition_board:demo"
+
+[tool.setuptools]
+# 顶层模块打包（数据通过 download_data 从 HuggingFace 拉取，不入包）
+py-modules = [
+    "engine", "infer", "dynamics", "level9", "validator",
+    "cognition_board", "multi_agent", "meta_board",
+]

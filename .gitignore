@@ -1,0 +1,35 @@
+# ===== 凭据与敏感文件（绝不入库）=====
+pypi.txt
+*.token
+token*
+.env
+.credentials
+*.pem
+*.key
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# ===== 构建产物 =====
+*.zip
+*.tar.gz
+三元九维19683大模型.zip
+
+# ===== 数据与缓存 =====
+.DS_Store
+*.log
+node_modules/
+
+# ===== 大数据外置（方案A：放 HuggingFace，不入 git）=====
+# 76MB 校正版 + 100MB 初版 全集 JSON
+知识库/三元九维19683_全集*.json
+知识库/*.db
+知识库/*.csv
+*.safetensors
+*.onnx
