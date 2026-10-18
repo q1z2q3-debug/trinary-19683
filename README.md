@@ -1,6 +1,42 @@
-# 三元九维19683 大模型
+# 三元九维19683 大模型 · Trinary-19683 Cognitive System
 
-把《三元九维19683体系》（729 份 docx、共 **19683 卦**）构建为可运行的**生成式推理模型**。
+> **EN** · *中文详版见下方 / Full Chinese documentation below.*
+
+---
+
+## English Overview
+
+A **recomputable, falsifiable, evolvable deterministic symbolic cognition layer**, built from the *Trinary Nine-Dimensional 19683 System* (729 sources, **19,683 gua**) — not a divination tool, but a deterministic cognitive anchor for LLMs / agents.
+
+**Structure:** each gua = 3 layers (upper/trend · middle/pivot · lower/base) × 3 lines = **9 lines**; each line is one of three states — **D** (carry/deposit), **R** (judge/feedback), **T** (gain/release). Total = **3⁹ = 19,683**.
+
+**Highlights**
+- **Deterministic reasoning layer** — full 19,683-gua space with a 3-generation corrected canonical table, deterministic self-adaptive rank (5-dim structural signatures, 100% recomputable, leave-one-out validated 100%), dynamic potential-flow inference, three-state axiomatic semantics, temporal evolution paths.
+- **Cognition Board v2** — falsification dynamics (tiered refutation, reversible migration, self-contradiction detection), Meta-Board L4 (M(X) meta-evaluation + M(M(X)) recursive self-examination), multi-agent protocol L5 (conflict localization to a migration edge, recomputable joint chains).
+- **Why it is not fortune-telling** — every gua / jump / migration carries a deterministic signature and an auditable trace: recomputable, verifiable, replayable, reversible.
+
+**Delivery:** standalone offline HTML model / inference workbench / service console (15+ APIs) / Python package (Apache-2.0).
+
+**Quick start**
+```bash
+# local service (full corpus + cognition board console)
+python3 server.py          # default port 8000 → http://127.0.0.1:8000/
+
+# CLI inference engine
+python3 engine.py
+python3 -c "from engine import Engine; e=Engine(); print(e.generate(14,27,1)['构型'])"
+
+# cognition board demos
+python3 cognition_board.py   # falsification / guided jump / dual-corpus learning
+python3 multi_agent.py       # multi-agent consensus from conflict
+python3 meta_board.py        # M(M(X)) recursive self-examination
+```
+
+**Links:** GitHub `q1z2q3-debug/trinary-19683` · License **Apache-2.0** · data hosted on HuggingFace (see `scripts/download_data.py`).
+
+---
+
+# 中文详版 · Full Chinese Documentation
 
 ## 体系是什么
 
