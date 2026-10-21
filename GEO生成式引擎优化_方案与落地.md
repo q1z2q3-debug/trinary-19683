@@ -82,7 +82,7 @@ GEO（Generative Engine Optimization）优化的是**大模型/生成式引擎**
 
 ### P1 · 本周
 - [x] **FAQ 分发文章已写好**：`GEO_FAQ_文章_en.md`（发 dev.to，英文）+ `GEO_FAQ_文章_zh.md`（发掘金/知乎）。⚠️ dev.to API 自动发布受阻（`.credentials/dev_api_key.enc` 无法解密——加密脚本未留存、passphrase 未知），**改手动粘贴发布**：登录 dev.to/掘金 → 新建文章 → 粘贴正文 → 设 tags（ai, llm, opensource, cognitive, python）。
-- [ ] **PyPI 发布打通**（Trusted Publishing 或 token），完善包描述关键词（trinary, ternary, cognitive, 19683, tne-core）。
+- [x] **PyPI 发布打通**：trinary19683 **2.6.0 已上线** https://pypi.org/project/trinary19683/2.6.0/ ，关键词含 GEO 检索词（yijing, iching, trinary, 19683, cognition, deterministic, symbolic, agent, refutation, meta-cognition）。
 - [ ] 知乎/CSDN 投递《三元九维19683认知体系》系列（复用已发掘金文 + 金融落地系列）。
 
 ### P2 · 后续
