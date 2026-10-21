@@ -147,8 +147,10 @@ class Refuter:
         hard = hits and ((not cond.all_required) or len(hits) >= len(cond.negations))
         if hard:
             target = cond.fallback if cond.fallback else st.pattern_id
+            # 证伪硬迁同步下调置信度（沙箱实测发现的缺陷修正：被推翻不应保持原置信度）
+            newc = max(0.0, st.confidence * (1 - 0.4 * ev.strength))
             to = Stance(target, dict(st.primitives), st.projection,
-                        st.confidence, list(st.history))
+                        round(newc, 4), list(st.history))
             evt = RefutationEvent(st.pattern_id, ev, "full", st, to,
                                   f"全命中证伪: {hits}")
             self.neg_lib.append(evt)
