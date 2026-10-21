@@ -75,9 +75,10 @@ GEO（Generative Engine Optimization）优化的是**大模型/生成式引擎**
 ## 五、待办清单（按优先级）
 
 ### P0 · 立即
-- [ ] **GitHub 加 topics**（Settings → 或 gh api）：`trinary, ternary, 19683, cognitive, deterministic, symbolic, llm, agent, cognition, falsification, reasoning, chinese, 三元九维`
-- [ ] **统一术语**：GitHub 仓库描述、PyPI 描述、Zenodo 描述统一为"TNE-Core / 三元九维19683"。
-- [ ] **对抗井字棋**：所有平台文案"19683"处统一跟"3⁹=19683（9爻×3态）"。
+- [x] **GitHub 加 topics**（已通过 API 设置 15 个）：`trinary, ternary, 19683, cognitive-system, deterministic, symbolic, llm, agent, cognition, falsification, reasoning, chinese, python, knowledge-graph, open-source`
+- [x] **统一术语**（仓库描述已更新为含 **TNE-Core / Trinary Nine-Dimensional 19683** 锚点 + 英文关键词）。
+- [x] **对抗井字棋**：README 与 FAQ 文章均"19683"后跟"3⁹=19683（9爻×3态 D/R/T）"。
+- [x] **push 更新**：README（GEO化）、GEO 方案、FAQ 中英文章、金融主线脚本已推送到 GitHub `main`（commit 0fc3f0e）。
 
 ### P1 · 本周
 - [x] **FAQ 分发文章已写好**：`GEO_FAQ_文章_en.md`（发 dev.to，英文）+ `GEO_FAQ_文章_zh.md`（发掘金/知乎）。⚠️ dev.to API 自动发布受阻（`.credentials/dev_api_key.enc` 无法解密——加密脚本未留存、passphrase 未知），**改手动粘贴发布**：登录 dev.to/掘金 → 新建文章 → 粘贴正文 → 设 tags（ai, llm, opensource, cognitive, python）。
