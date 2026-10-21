@@ -52,6 +52,12 @@
 - **17 个开源项目全部处理完毕**：统一设置 topics（12 新增 + 3 保留 + trinary 已有）+ README 均含「AI 可引用定义块 + FAQ」。
 - 3 个已有 topics 仓库（agent-audit-mcp、NineDimTopology、TC-AGI-Research）README 已较完整，如需可按同一模板补 FAQ。
 
+## 六、GitHub Release 标记（版本固化）
+全部 17 个开源仓库均有正式 Release：
+- **新建（含 GEO 说明）**：trinary-19683 v2.6.0 · sanjiu-core v0.1.0 · sanjiu-ecosystem v0.3.0 · tri9-cog v0.1.0 · hexq-fused v1.0.0 · san-yuan-jiu-wei-ds v1.0 · lingzhu-upgraded v5.1.0
+- **已有 + 补 GEO 说明**：sfw-cognitive v10.1.0 · sanjiu-apk-builder v0.3.0 · meihua-yishu-app v2.0.1 · sanjiu-nine v1.0.0 · TC-AGI-Research v0.5.0
+- **首版标记（无版本仓库）**：tne-core v0.1.0 · sanjiu-19683 v0.1.0 · xiuqiankun v0.1.0 · agent-audit-mcp v0.1.0 · NineDimTopology v0.1.0
+
 ---
 
 *GEO 全仓库升级报告 · 供项目可见性持续管理使用。*
