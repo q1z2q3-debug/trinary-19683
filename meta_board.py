@@ -78,7 +78,8 @@ def strategize(st: Stance, meta: dict) -> Stance:
 # ---------------------------------------------------------------------
 def recursive(st: Stance, depth: int = 2) -> list:
     chain = [{"层": "L0·对象", "格局": st.pattern_id, "置信度": st.confidence,
-              "矛盾": contradictions(st), "状态价": state_score(st)}]
+              "矛盾": contradictions(st), "状态价": state_score(st),
+              "认知层": "L0·本能·知道对象"}]
     cur = meta_evaluate(st)
     for d in range(1, depth + 1):
         # 自省：元评估自身是否过度悲观/乐观
@@ -88,14 +89,79 @@ def recursive(st: Stance, depth: int = 2) -> list:
             bias = "过度乐观（低估风险）"
         else:
             bias = "平稳（评估可靠）"
+        # 自省偏差 → 三分认知态（知道/不知道/转化）：过度悲观=不知道、过度乐观=转化、平稳=知道
+        tri = {"过度悲观": "不知道", "过度乐观": "转化", "平稳": "知道"}.get(bias.split("（")[0], "知道")
         chain.append({"层": f"L{d}·元评估", "对象": cur.get("对象", "(递归)"),
                       "置信度": cur["置信度"], "健康度": cur["健康度"],
-                      "风险": cur["风险"], "自省": bias})
+                      "风险": cur["风险"], "自省": bias,
+                      "认知层": f"L{d}·{tri}（自指第 {d} 层）"})
         # 下一层：以「评估的健康度」为新对象继续递归（收敛则停）
         cur = {"对象": f"(L{d}评估)", "置信度": cur["健康度"],
                "健康度": round(max(0.0, 1 - 0.5 * len(cur["风险"])), 3),
                "风险": cur["风险"] or ["无"]}
     return chain
+
+
+# ---------------------------------------------------------------------
+# 三分认知层（认知轴 · 自指递归编码）
+# 基本单元：每个认知状态 = 知道(0/阳) · 不知道(1/阴) · 转化(2/变) 三元。
+# 递归：对认知状态自身再三分 → 第 n 层 = 3^n 种认知状态。
+#   L9 = 3^9 = 19683，与「三元九维19683」状态空间同构 —— 认知轴 = 体系第 10 根轴。
+# ---------------------------------------------------------------------
+TRI_CN = {0: "知道", 1: "不知道", 2: "转化"}
+TRI_SYM = {0: "阳", 1: "阴", 2: "变"}
+TRI_SHORT = {0: "知", 1: "不", 2: "变"}
+
+# 代表性认知路径的层名（含用户措辞）
+_GLOSS = {
+    ():        "L0·本能认知",
+    (0,):      "L1·知道（确信）",
+    (1,):      "L1·不知道（缺口）",
+    (2,):      "L1·转化（自省起点）",
+    (0, 0):    "L2·知道自己知道（元确信）",
+    (0, 1):    "L2·知道自己不知道（元缺口）",
+    (1, 0):    "L2·不知道自己知道（隐知·潜能）",
+    (1, 1):    "L2·不知道自己不知道（盲点）",
+    (2, 0):    "L2·转化中知道（动态确信）",
+    (2, 1):    "L2·转化中不知道（开放缺口）",
+    (0, 0, 0): "L3·知道自己知道自己知道",
+    (0, 1, 1): "L3·知道自己不知道自己不知道",
+    (1, 1, 0): "L3·不知道自己不知道自己知道",
+}
+
+
+def cognition_path(path: tuple) -> dict:
+    """给一条自指认知路径（每层 0/1/2）→ 认知层坐标 + 层名 + 深度 + 状态空间。
+    编码：code = 层区间偏移(base) + 层内码(inner)，跨层唯一、层层递增。"""
+    depth = len(path)
+    base = sum(3 ** d for d in range(0, depth))       # L0(空态=1)+L1..L(depth-1) 的状态数偏移
+    inner = 0
+    for t in path:
+        inner = inner * 3 + t                          # 保持路径顺序权重递减
+    code = base + inner
+    name = "→".join(TRI_CN[t] for t in path) if path else "本能"
+    sym = "".join(TRI_SYM[t] for t in path) if path else "—"
+    return {"path": path, "code": code, "depth": depth,
+            "layer": f"L{depth}", "name": name, "sym": sym,
+            "gloss": _GLOSS.get(path, f"L{depth}·{name}"), "space": 3 ** depth}
+
+
+def cognition_spectrum(depth: int = 3) -> list:
+    """列出 0..3^depth-1 的全部认知状态（每层三分、自指递归）。"""
+    rows = []
+    for code in range(3 ** depth):
+        path = []
+        x = code
+        for _ in range(depth):
+            path.append(x % 3)
+            x //= 3
+        rows.append(cognition_path(tuple(reversed(path))))
+    return rows
+
+
+def cognition_total(levels: int = 9) -> int:
+    """认知轴总状态数：L1~L9 各层三分累计 = 3 + 9 + 27 + … + 3^9。"""
+    return sum(3 ** d for d in range(1, levels + 1))
 
 
 # ---------------------------------------------------------------------
@@ -135,8 +201,21 @@ def demo():
     s, e = ref.check(Xp, ev)
     print(f"   证据命中 → {e.hit_type}：迁往 {s.pattern_id}（元修正后的结论也接受证伪）")
 
+    print("\n[6] 三分认知层（认知轴）：元自省挂上可复算的认知坐标")
+    print("   每个认知状态 = 知道/不知道/转化；对自身再三分 → 第 n 层 3^n 种认知状态")
+    for p in [(), (1,), (0, 1), (1, 0), (0, 0, 1), (2, 1)]:
+        c = cognition_path(p)
+        print(f"   认知路径 {c['sym']:<4} → code={c['code']:<4} {c['layer']} "
+              f"{c['gloss']:<28}（空间 3^{c['depth']}={c['space']}）")
+    print(f"   累计状态空间 L1~L9 = {cognition_total(9):,}（L9 层 = 3^9 = {3**9:,}，与三元九维同构）")
+
+    print("\n[7] 认知轴挂到元棋盘：自省偏差 → 三分认知态")
+    for r in recursive(X, depth=2):
+        print(f"   {r['层']:<12} 认知层={r.get('认知层','—')}  自省={r.get('自省','—')}")
+
     print("\n" + "=" * 66)
     print("元棋盘=受控递归的自省：M(X)→策略调整→M(M(X))→可证伪。反思不是玄学，是确定性操作。")
+    print("三分认知层=自指递归的认知坐标：知道/不知道/转化，L9=19683 —— 思维维度上的体系同构。")
     print("=" * 66)
 
 

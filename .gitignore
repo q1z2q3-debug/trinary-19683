@@ -33,3 +33,9 @@ node_modules/
 知识库/*.csv
 *.safetensors
 *.onnx
+.credentials/
+
+# ===== 金融研究数据（可由 finance_pull_extend.py 重拉，不入库）=====
+finance_*panel*.csv
+finance_panel_ext_hs300.csv
+pull_extend*.log
