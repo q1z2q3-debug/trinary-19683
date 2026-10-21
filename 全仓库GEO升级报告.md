@@ -20,12 +20,12 @@
 | agent-audit-mcp | 10（保留） | ⏳ 已有 topics | 待按需 |
 | NineDimTopology | 11（保留） | ⏳ 已有 topics | 待按需 |
 | TC-AGI-Research | 10（保留） | ⏳ 已有 topics | 待按需 |
-| sanjiu-apk-builder | 7 | ⏳ 未升 README | topics 已设 |
-| meihua-yishu-app | 7 | ⏳ 未升 README | topics 已设 |
-| san-yuan-jiu-wei-ds | 7 | ⏳ 未升 README | topics 已设 |
-| hexq-fused | 7 | ⏳ 未升 README | topics 已设 |
-| xiuqiankun | 6 | ⏳ 未升 README | topics 已设 |
-| lingzhu-upgraded | 6 | ⏳ 未升 README | topics 已设 |
+| sanjiu-apk-builder | 7 | ✅ 加定义块+FAQ（工程类） | 已升级 |
+| meihua-yishu-app | 7 | ✅ 加定义块+FAQ（占卜类） | 已升级 |
+| san-yuan-jiu-wei-ds | 7 | ✅ 加定义块+FAQ（TCM引擎） | 已升级 |
+| hexq-fused | 7 | ✅ 加定义块+FAQ | 已升级 |
+| xiuqiankun | 6 | ✅ 创建 README（占卜类） | 已升级 |
+| lingzhu-upgraded | 6 | ✅ 加定义块+FAQ | 已升级 |
 | deepseek-harness | — | fork，跳过 | — |
 
 ## 二、做了什么
@@ -44,11 +44,13 @@
 - 对抗混淆：FAQ Q2 明确「与风水『三元九运』/《易经》占卜功能无关」。
 
 ## 四、本次 push 记录
-- tne-core 已完整未改 · sanjiu-core(6fcf14f) · sanjiu-ecosystem(8b680f4) · sanjiu-nine(c06be9b) · tri9-cog(5a14066) · sfw-cognitive(c0420b0) · sanjiu-19683(e5a24ff) — 全部推送到各仓库 main。
+- 第一批：sanjiu-core(6fcf14f) · sanjiu-ecosystem(8b680f4) · sanjiu-nine(c06be9b) · tri9-cog(5a14066) · sfw-cognitive(c0420b0) · sanjiu-19683(e5a24ff)
+- 第二批：sanjiu-apk-builder(66bed68) · hexq-fused(8fac965) · san-yuan-jiu-wei-ds(3ff5bef) · lingzhu-upgraded(d29f8ce) · meihua-yishu-app(1fb6b59) · xiuqiankun(a7caabf, 空仓库首次推送)
+- tne-core 已完整未改。全部推送到各仓库 main。
 
-## 五、剩余可做（按需）
-- 次要仓库（sanjiu-apk-builder、meihua-yishu-app、xiuqiankun、hexq-fused、san-yuan-jiu-wei-ds、lingzhu-upgraded）README 尚未插入 AI 摘要块——如需，可沿用同一模板逐个补齐。
-- 3 个已有 topics 仓库（agent-audit-mcp、NineDimTopology、TC-AGI-Research）README 可按需补 FAQ。
+## 五、结论
+- **17 个开源项目全部处理完毕**：统一设置 topics（12 新增 + 3 保留 + trinary 已有）+ README 均含「AI 可引用定义块 + FAQ」。
+- 3 个已有 topics 仓库（agent-audit-mcp、NineDimTopology、TC-AGI-Research）README 已较完整，如需可按同一模板补 FAQ。
 
 ---
 
