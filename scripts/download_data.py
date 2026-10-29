@@ -6,7 +6,7 @@
     python3 scripts/download_data.py            # 下载到 知识库/
 
 说明：本脚本从 HuggingFace 仓库拉取「规范校正版」全集 JSON 到本地知识库。
-未上传前，请把 HF_REPO 换成你的数据集仓库 ID（如 q1z2q3/trinary-19683-data）。
+数据集仓库：https://huggingface.co/datasets/q1z2q3/trinary-19683-data（已公开上传）
 """
 import json
 import os
@@ -18,7 +18,7 @@ KB = os.path.join(ROOT, "知识库")
 # 目标：规范校正版全集（引擎数据源）
 TARGET = os.path.join(KB, "三元九维19683_全集_规范校正版.json")
 # HuggingFace 仓库（把下两行换成你的仓库与文件名）
-HF_REPO = "q1z2q3/trinary-19683-data"          # TODO: 改为你的 HF 仓库
+HF_REPO = "q1z2q3/trinary-19683-data"          # 已公开上传
 HF_FILE = "三元九维19683_全集_规范校正版.json"
 
 
