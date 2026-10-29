@@ -25,6 +25,7 @@ pip install trinary19683
 首次使用拉取全量知识库（可选，用于全文查询/检索）：
 ```bash
 python3 scripts/download_data.py   # 从 HuggingFace 拉取 19683 卦全量数据
+# 数据集: https://huggingface.co/datasets/q1z2q3/trinary-19683-data
 ```
 
 ## 快速开始

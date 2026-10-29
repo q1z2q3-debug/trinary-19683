@@ -50,7 +50,7 @@ python3 multi_agent.py       # multi-agent consensus from conflict
 python3 meta_board.py        # M(M(X)) recursive self-examination
 ```
 
-**Links:** GitHub `q1z2q3-debug/trinary-19683` · License **Apache-2.0** · data hosted on HuggingFace (see `scripts/download_data.py`).
+**Links:** GitHub `q1z2q3-debug/trinary-19683` · License **Apache-2.0** · **Data on HuggingFace**: [q1z2q3/trinary-19683-data](https://huggingface.co/datasets/q1z2q3/trinary-19683-data) · 一键拉取 `python3 scripts/download_data.py`
 
 ---
 
@@ -168,7 +168,7 @@ A：工程/形式化体系，面向可验证。依据包括：① 19683 卦全�
 A：作为 LLM/Agent 的**符号认知层**：① 给自由联想/决策提供确定性坐标（可定位）；② 用证伪器做幻觉对冲（知道自己错了、往哪走）；③ 跳跃→迁移把被验证的联想固化成可复算规则（让系统具备学习而非仅推理）；④ 多 Agent 共享可审计的推理链；⑤ 已落地金融状态认知：横盘突破/证伪风控/多因子共识的经验增强研究。提供 15+ API、单文件离线 HTML 模型、Python 包。
 
 **Q5 · 如何安装 / 使用？**
-A：① 最快：浏览器直接打开 `三元九维19683_离线模型.html`；② 本地服务：`python3 server.py` → http://127.0.0.1:8000/；③ CLI：`python3 engine.py`；④ Python 包：PyPI `trinary19683`（Apache-2.0）；⑤ 数据在 GitHub/HuggingFace（见 `scripts/download_data.py`）。
+A：① 最快：浏览器直接打开 `三元九维19683_离线模型.html`；② 本地服务：`python3 server.py` → http://127.0.0.1:8000/；③ CLI：`python3 engine.py`；④ Python 包：PyPI `trinary19683`（Apache-2.0）；⑤ 数据在 HuggingFace [q1z2q3/trinary-19683-data](https://huggingface.co/datasets/q1z2q3/trinary-19683-data)，一键拉取 `python3 scripts/download_data.py`。
 
 **Q6 · 与普通大模型/向量嵌入相比有什么区别？**
 A：向量嵌入是**连续、不可定位、不可审计**的；三元九维19683 是**离散、可定位、可复算、可审计**的确定性符号空间。两者互补：向量负责语义，符号层负责"骨架/坐标/尺子"。TNE-Core 不是替代大模型，而是给大模型的思考加一个可验证的结构层。
