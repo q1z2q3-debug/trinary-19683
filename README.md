@@ -22,6 +22,18 @@
 
 ---
 
+## 思想谱系 / Intellectual Lineage
+
+**TNE-Core 承接中国古代"算法传统"**——《九章算术》"寓理于算"、吴文俊"数学机械化"在 AI 时代的续章。它与西方公理演绎的"结构传统"互补：**结构传统给提问框架，算法传统给落地路径**。本项目把"寓理于算"从数学层搬到认知层——用 3⁹=19683 个可复算状态，为 LLM/Agent 提供确定性认知骨架。
+
+```
+《九章算术》寓理于算（汉代） → 吴文俊"数学机械化"（20 世纪） → 三元九维19683（本项目）
+```
+
+> 算筹用有限符号表达巨大数域，我们用 3 态 × 9 维表达 19683 个认知状态——同一个"器物化繁为简"的传统。详见 [`数理乾坤_思想谱系与项目定位.md`](数理乾坤_思想谱系与项目定位.md)。
+
+---
+
 ## English Overview
 
 A **recomputable, falsifiable, evolvable deterministic symbolic cognition layer**, built from the *Trinary Nine-Dimensional 19683 System* (729 sources, **19,683 gua**) — not a divination tool, but a deterministic cognitive anchor for LLMs / agents.
