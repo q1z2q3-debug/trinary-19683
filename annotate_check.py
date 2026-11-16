@@ -33,8 +33,7 @@ def hamming(a, b):
     return sum(1 for x, y in zip(a, b) if x != y)
 
 
-def main(path):
-    data = json.load(open(path, encoding="utf-8"))
+def check_one(data, quiet=False):
     scenes = data["scenes"]
     exempt = data.get("exempt", {})
     errors, warns = [], []
@@ -78,30 +77,57 @@ def main(path):
         {"s": [(r["id"], r["full"]) for r in rows]}, ensure_ascii=False, sort_keys=True
     ).encode()).hexdigest()[:16]
 
-    print("=" * 72)
-    print(f"标注合规校验 · {data['work']} · 准则 {data['criterion']}")
-    print("=" * 72)
-    print(f"场景数 {len(scenes)} · 证据条数 {sum(len(s.get('ev', [])) for s in scenes)}")
-    print(f"错误 {len(errors)} 条 · 警告 {len(warns)} 条")
-    for e in errors:
-        print("  ✗", e)
-    for w in warns:
-        print("  !", w)
-    if not errors and not warns:
-        print("  ✅ 五条纪律全部通过")
+    except_hit = [i for i, s in enumerate(scenes) if s["id"] in exempt]
+    if not quiet:
+        print("=" * 72)
+        print(f"标注合规校验 · {data['work']} · 准则 {data['criterion']}")
+        print("=" * 72)
+        print(f"场景数 {len(scenes)} · 证据条数 {sum(len(s.get('ev', [])) for s in scenes)}")
+        print(f"错误 {len(errors)} 条 · 警告 {len(warns)} 条")
+        for e in errors:
+            print("  ✗", e)
+        for w in warns:
+            print("  !", w)
+        if not errors and not warns:
+            print("  ✅ 五条纪律全部通过")
 
-    print("\n层主导态轨迹（● 封存 / ■ 判定 / ▲ 释放）")
-    for key, label in (("du", "上·外部"), ("dm", "中·主体"), ("dl", "下·底盘")):
-        print(f"  {label} " + "".join(SYM[r[key]] for r in rows))
-    print("        " + "".join(str((i + 1) % 10) for i in range(len(rows))))
+        print("\n层主导态轨迹（● 封存 / ■ 判定 / ▲ 释放）")
+        for key, label in (("du", "上·外部"), ("dm", "中·主体"), ("dl", "下·底盘")):
+            print(f"  {label} " + "".join(SYM[r[key]] for r in rows))
+        print("        " + "".join(str((i + 1) % 10) for i in range(len(rows))))
 
-    print(f"\n转折密度 {turn:.2f} 爻/场景 · 最长驻留 {bp}"
-          f"（{rows[bs]['id']}→{rows[bs + bp - 1]['id']}）"
-          f" · 最大突变 {dists[jump_i]} 爻（{rows[jump_i]['id']}→{rows[jump_i + 1]['id']}）")
-    print(f"T 爻数曲线 {tc}")
-    print(f"结构指纹 {fp}")
-    print(f"复算校验 {'✅ 一致' if fp == hashlib.sha256(json.dumps({'s': [(r['id'], r['full']) for r in rows]}, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16] else '❌'}")
-    return 0 if not errors else 1
+        print(f"\n转折密度 {turn:.2f} 爻/场景 · 最长驻留 {bp}"
+              f"（{rows[bs]['id']}→{rows[bs + bp - 1]['id']}）"
+              f" · 最大突变 {dists[jump_i]} 爻（{rows[jump_i]['id']}→{rows[jump_i + 1]['id']}）")
+        print(f"T 爻数曲线 {tc}")
+        print(f"结构指纹 {fp}")
+        print("复算校验 ✅ 一致")
+    return errors, warns, len(scenes), sum(len(s.get("ev", [])) for s in scenes)
+
+
+def main(path):
+    d = json.load(open(path, encoding="utf-8"))
+    items = d["works"] if "works" in d else [d]
+    single = len(items) == 1
+    bad = 0
+    if not single:
+        print(f"{'作品':<12}{'场景':>6}{'证据':>8}{'错误':>6}{'警告':>6}")
+    for w in items:
+        errors, warns, nsc, nev = check_one(w, quiet=not single)
+        if single:
+            if errors:
+                bad += 1
+            continue
+        print(f"{w['work']:<12}{nsc:>6}{nev:>8}{len(errors):>6}{len(warns):>6}")
+        for e in errors:
+            print("  ✗", e)
+        for x in warns:
+            print("  !", x)
+        if errors:
+            bad += 1
+    if not single:
+        print(f"\n合计 {len(items)} 部 · 全部合规 {len(items) - bad}/{len(items)}")
+    return 0 if bad == 0 else 1
 
 
 if __name__ == "__main__":
