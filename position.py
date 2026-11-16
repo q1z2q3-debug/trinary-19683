@@ -24,12 +24,29 @@ FILES = ["jwr_annot.json", "works_annot.json", "works_annot2.json", "works_annot
 
 
 def load_lib():
+    """返回 (作品名, scenes)。保留 scenes 以便计算派生维度。"""
     out = []
     for fn in FILES:
         d = json.load(open(fn, encoding="utf-8"))
         for w in (d["works"] if "works" in d else [d]):
-            out.append((w["work"], features(w["scenes"])))
+            out.append((w["work"], w["scenes"]))
     return out
+
+
+def internal_turn(scenes):
+    """第八维：内部转折度 = 后半 turn − 前半 turn。
+
+    不是七维的一部分，是派生量——只有全篇标注才算得出，
+    分段标注学不到。值域约 −3.0 ~ +4.5：
+      负 = 前密后疏（收束型，26 部里 81%）
+      零 = 内部无转折（西游记）
+      正 = 前平后爆（延迟爆发型，雪国 +4.50）
+    与 tail_head 不同：tail 问终点多高，它问力气放在哪一半。
+    """
+    h = len(scenes) // 2
+    if h == 0 or len(scenes) < 2:
+        return None
+    return features(scenes[h:])["turn"] - features(scenes[:h])["turn"]
 
 
 def vecs(lib):
@@ -46,12 +63,12 @@ def report(path, k=5):
     target = []
     d = json.load(open(path, encoding="utf-8"))
     for w in (d["works"] if "works" in d else [d]):
-        target.append((w["work"], features(w["scenes"])))
+        target.append((w["work"], w["scenes"]))
     lib = load_lib()
     lib = [(n, s) for n, s in lib if n not in {t[0] for t in target}] + target
-    X, mu, sd, Z, P, ev = vecs(lib)
+    X, mu, sd, Z, P, ev = vecs([(n, features(s)) for n, s in lib])
     idx_t = [i for i, (n, _) in enumerate(lib) if n in {t[0] for t in target}]
-    lib_feats = [f for _, f in lib]
+    lib_feats = [features(s) for _, s in lib]
 
     for t in idx_t:
         z = (X[t] - mu) / sd
@@ -60,12 +77,17 @@ def report(path, k=5):
         all_sp = np.array([np.mean(sorted(np.linalg.norm(P[i] - P[j]) for j in range(len(lib)) if j != i)[:k])
                            for i in range(len(lib))])
         pct = (all_sp < sp).mean() * 100
+        rank = int((all_sp > sp).sum()) + 1
         f = lib_feats[t]
         dev = sorted(((abs(z[j]), DIMS[j]) for j in range(len(DIMS))), reverse=True)[:2]
 
         print(f"\n《{lib[t][0]}》")
         print("  " + "  ".join(f"{d}={f[d]:+.2f}" for d in DIMS))
-        print(f"  稀疏度 {sp:.2f}（全库第 {100 - int(pct)} 稀疏 / 共 {len(lib)} 部，{pct:.0f}% 的作品比它更密）")
+        it = internal_turn(lib[t][1])
+        if it is not None:
+            kind = "前密后疏（收束型）" if it < -0.3 else ("前平后爆（延迟型）" if it > 0.3 else "内部均质")
+            print(f"  内部转折度 {it:+.2f}（后半 turn − 前半 turn）→ {kind}")
+        print(f"  稀疏度 {sp:.2f}（全库第 {rank} 稀疏 / 共 {len(lib)} 部，{pct:.0f}% 的作品比它更密）")
         print("  最近邻：" + " / ".join(f"《{n}》{dd:.2f}" for dd, n in dists[:3]))
         print("  方位：偏离最大的是 " + " 与 ".join(
             f"{d}（{'高于' if z[DIMS.index(d)] > 0 else '低于'}均值 {abs(z[DIMS.index(d)]):.1f}σ）" for _, d in dev))
