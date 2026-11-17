@@ -1,0 +1,112 @@
+{
+  "work": "红楼梦·后四十回（结构模板）",
+  "source": "hongloumeng_annot.json 的 S21–S30 实测九位（120 回每 4 回一场，等距采样）",
+  "note": "这是『认知空间续写』的目标骨架。B 组生成时按此模板逐场约束；A 组不给此文件。模板不是编的，是从真实标注里抽的。",
+  "target": {
+    "turn": 2.11,
+    "slope": 0.30,
+    "jump_pos": 0.90,
+    "reside_r": 0.40,
+    "peak_n": 2,
+    "base": 2.70,
+    "tail_head": 2.00
+  },
+  "target_derived": {
+    "total_variation": 19,
+    "note": "turn × (n−1) = 2.11 × 9 ≈ 19 爻。整段只有 19 爻的总摆动，这是最硬的一条配额：写超了立刻被回验打回。"
+  },
+  "skeleton_facts": [
+    "l 层（意义/感知/承载）10 场里 9 场为 T/T/D：底盘持续开放，承载持续消耗",
+    "m2（连接）恒定 R：关系被维持，但没有新连接建立",
+    "m3（决断）9 场为 D：主体几乎不主动选择，全被推着走",
+    "u2（势能资源）8 场为 D：外部支持持续撤走",
+    "全段只有 2 个峰（S25 黛玉焚稿、S28 贾母归天），末段 S30 单点抬到全 T"
+  ],
+  "scenes": [
+    {
+      "id": "S21",
+      "chapters": "81-84",
+      "name": "两番入家塾·元妃染恙",
+      "target_code": {"u": "RDD", "m": "DRD", "l": "TTD"},
+      "function": "接缝：与 S20 距离仅 1，必须几乎无变化地接上",
+      "hard": ["u3=R 规则仍在但已被架空", "m3=D 无主动选择"]
+    },
+    {
+      "id": "S22",
+      "chapters": "85-88",
+      "name": "提亲·抚琴悲往事",
+      "target_code": {"u": "RRD", "m": "DRD", "l": "TTD"},
+      "function": "第一次试探性提亲，u2 仍为 R（资源尚未撤净）",
+      "hard": ["u2=R 唯一一处不为 D 的中段", "m2=R 关系维持"]
+    },
+    {
+      "id": "S23",
+      "chapters": "89-92",
+      "name": "绝粒·妄谈禅",
+      "target_code": {"u": "RDD", "m": "DRD", "l": "TTD"},
+      "function": "回到 S21 的骨架，形成停滞带的第一段",
+      "hard": ["与 S21 距离仅 1，必须几乎重复"]
+    },
+    {
+      "id": "S24",
+      "chapters": "93-96",
+      "name": "失通灵·元妃薨",
+      "target_code": {"u": "RDT", "m": "DRD", "l": "TTD"},
+      "function": "u1 首次转 T：势能崩塌后释放出方向",
+      "hard": ["u1=T 全段仅两处之一"]
+    },
+    {
+      "id": "S25",
+      "chapters": "97-100",
+      "name": "黛玉焚稿·绛珠魂归",
+      "target_code": {"u": "DDD", "m": "DDD", "l": "TTD"},
+      "function": "峰 1：全封（u/m 全 D）夹在全开放底盘上",
+      "hard": ["m2 唯一一次为 D：关系被切断", "必须构成局部极大"]
+    },
+    {
+      "id": "S26",
+      "chapters": "101-104",
+      "name": "幽魂·驱妖",
+      "target_code": {"u": "DDD", "m": "DRD", "l": "TTD"},
+      "function": "峰后回落，仍在低位",
+      "hard": ["与 S25 距离 3，不可再抬"]
+    },
+    {
+      "id": "S27",
+      "chapters": "105-108",
+      "name": "查抄宁国府",
+      "target_code": {"u": "RDD", "m": "DRD", "l": "TTD"},
+      "function": "回到 S23 的骨架（第三次重复），停滞带第二段",
+      "hard": ["与 S23 同码，必须允许『同一张脸重复出现』"]
+    },
+    {
+      "id": "S28",
+      "chapters": "109-112",
+      "name": "贾母归天·鸳鸯殉主",
+      "target_code": {"u": "DDD", "m": "DDD", "l": "TTD"},
+      "function": "峰 2：第二次全封",
+      "hard": ["m2=D 第二次切断", "必须构成第二个局部极大"]
+    },
+    {
+      "id": "S29",
+      "chapters": "113-116",
+      "name": "凤姐托孤·悟仙缘",
+      "target_code": {"u": "RDT", "m": "DRD", "l": "TTR"},
+      "function": "峰后回升：u1 第二次 T，l1 首次 R",
+      "hard": ["l1 首次不为 D：承载从消耗转为维持"]
+    },
+    {
+      "id": "S30",
+      "chapters": "117-120",
+      "name": "宝玉出家·白茫茫",
+      "target_code": {"u": "TDT", "m": "TDT", "l": "TTT"},
+      "function": "终点：唯一一处 u3=T、m 层两处 T、l 层全 T",
+      "hard": ["必须让 tail 落在 +2.0 附近", "m3 全段唯一一次为 T"]
+    }
+  ],
+  "acceptance": {
+    "structure_hit": "七维到目标的标准化距离 < 1.0（以 26 部库的 std 归一）",
+    "local_legal": "每场 9 条证据、每条 ≥5 字、非豁免场不得九位全同（annotate_check.py 0 错误）",
+    "out_of_scope": "文学质量（这句好不好、这个人像不像）明确不在本模型能力内"
+  }
+}

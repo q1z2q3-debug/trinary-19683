@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>直接续写 vs 认知空间续写</title>
+<style>body{margin:0;padding:16px;background:#fbfaf7;font-family:system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;}</style>
+</head>
+<body>
+<svg viewBox="0 0 900 570" style="width:100%;max-width:1100px;height:auto;display:block;color:#1d2129;">
+  <text x="0" y="20" font-size="14.5" font-weight="700">直接续写 vs 认知空间续写</text>
+  <text x="0" y="38" font-size="10.5" fill="#8a8f99">前 80 回实测 turn 4.05 / peak 6 / tail −0.83；后 40 回实测 turn 2.11 / peak 2 / tail +2.0</text>
+
+  <rect x="0" y="52" width="400" height="26" fill="#8fa8bd" opacity="0.25"/>
+  <rect x="500" y="52" width="400" height="26" fill="#8fb59a" opacity="0.28"/>
+  <text x="200" y="70" font-size="11.5" text-anchor="middle" font-weight="700" fill="#3c5872">直接续写</text>
+  <text x="700" y="70" font-size="11.5" text-anchor="middle" font-weight="700" fill="#2f6f4f">认知空间续写</text>
+
+  <g font-size="10">
+    <rect x="0" y="82" width="400" height="54" fill="#ffffff" stroke="#e2ded6"/>
+    <text x="10" y="100" font-size="9.5" font-weight="700" fill="#8a8f99">输入</text>
+    <text x="10" y="117" fill="#3d4450">前 80 回原文，塞进上下文窗口</text>
+    <text x="10" y="132" fill="#3d4450">模型看到的是「最近的一段」</text>
+    <rect x="500" y="82" width="400" height="54" fill="#ffffff" stroke="#e2ded6"/>
+    <text x="510" y="100" font-size="9.5" font-weight="700" fill="#8a8f99">输入</text>
+    <text x="510" y="117" fill="#3d4450">前 80 回原文 + 指纹（七维八维）+</text>
+    <text x="510" y="132" fill="#3d4450">每场九位模板</text>
+
+    <rect x="0" y="136" width="400" height="54" fill="#f6f4ef" stroke="#e2ded6"/>
+    <text x="10" y="154" font-size="9.5" font-weight="700" fill="#8a8f99">优化目标</text>
+    <text x="10" y="171" fill="#3d4450">下一个 token 最像</text>
+    <text x="10" y="186" fill="#3d4450">——局部像，不等于全篇对</text>
+    <rect x="500" y="136" width="400" height="54" fill="#f6f4ef" stroke="#e2ded6"/>
+    <text x="510" y="154" font-size="9.5" font-weight="700" fill="#8a8f99">优化目标</text>
+    <text x="510" y="171" fill="#3d4450">整篇落位命中目标坐标</text>
+    <text x="510" y="186" fill="#3d4450">——先定骨，再填肉</text>
+
+    <rect x="0" y="190" width="400" height="54" fill="#ffffff" stroke="#e2ded6"/>
+    <text x="10" y="208" font-size="9.5" font-weight="700" fill="#a33a3a">最可能的失败</text>
+    <text x="10" y="225" fill="#3d4450">把前 80 回的密度惯性带下去</text>
+    <text x="10" y="240" fill="#3d4450">→ 后段写得太密（turn 偏高）</text>
+    <rect x="500" y="190" width="400" height="54" fill="#ffffff" stroke="#e2ded6"/>
+    <text x="510" y="208" font-size="9.5" font-weight="700" fill="#2f6f4f">可预防</text>
+    <text x="510" y="225" fill="#3d4450">目标密度先定死，每场按模板写</text>
+    <text x="510" y="240" fill="#3d4450">→ 密度不是靠感觉，是靠配额</text>
+
+    <rect x="0" y="244" width="400" height="54" fill="#f6f4ef" stroke="#e2ded6"/>
+    <text x="10" y="262" font-size="9.5" font-weight="700" fill="#a33a3a">第二个失败</text>
+    <text x="10" y="279" fill="#3d4450">不知道全书要几个峰：一路平推</text>
+    <text x="10" y="294" fill="#3d4450">（0–1 个）或堆高潮（3–4 个）</text>
+    <rect x="500" y="244" width="400" height="54" fill="#f6f4ef" stroke="#e2ded6"/>
+    <text x="510" y="262" font-size="9.5" font-weight="700" fill="#2f6f4f">可指定</text>
+    <text x="510" y="279" fill="#3d4450">峰的位置与数量写进模板</text>
+    <text x="510" y="295" fill="#3d4450">→ peak 从偶然变成设计</text>
+
+    <rect x="0" y="298" width="400" height="54" fill="#ffffff" stroke="#e2ded6"/>
+    <text x="10" y="316" font-size="9.5" font-weight="700" fill="#a33a3a">第三个失败</text>
+    <text x="10" y="333" fill="#3d4450">不知道结尾该比开头高还是低</text>
+    <text x="10" y="348" fill="#3d4450">→ 随手写成大团圆或全灭</text>
+    <rect x="500" y="298" width="400" height="54" fill="#ffffff" stroke="#e2ded6"/>
+    <text x="510" y="316" font-size="9.5" font-weight="700" fill="#2f6f4f">可预先指定</text>
+    <text x="510" y="333" fill="#3d4450">tail 目标值写进约束</text>
+    <text x="510" y="348" fill="#3d4450">→ 结尾方向成为可调参数</text>
+
+    <rect x="0" y="352" width="400" height="54" fill="#f6f4ef" stroke="#e2ded6"/>
+    <text x="10" y="370" font-size="9.5" font-weight="700" fill="#8a8f99">可复算</text>
+    <text x="10" y="387" fill="#3d4450">每次生成不同，无法互相比较</text>
+    <text x="10" y="402" fill="#3d4450">「哪个续得更对」答不出来</text>
+    <rect x="500" y="352" width="400" height="54" fill="#f6f4ef" stroke="#e2ded6"/>
+    <text x="510" y="370" font-size="9.5" font-weight="700" fill="#2f6f4f">可排序</text>
+    <text x="510" y="387" fill="#3d4450">每次生成算一个落位距离</text>
+    <text x="510" y="402" fill="#3d4450">→ 三个续本可以排座次</text>
+
+    <rect x="0" y="406" width="400" height="54" fill="#ffffff" stroke="#e2ded6"/>
+    <text x="10" y="424" font-size="9.5" font-weight="700" fill="#8a8f99">能约束</text>
+    <text x="10" y="441" fill="#3d4450">语体、口吻、局部情节连贯</text>
+    <text x="10" y="456" fill="#3d4450">——这些它其实做得不差</text>
+    <rect x="500" y="406" width="400" height="54" fill="#ffffff" stroke="#e2ded6"/>
+    <text x="510" y="424" font-size="9.5" font-weight="700" fill="#2f6f4f">能约束</text>
+    <text x="510" y="441" fill="#3d4450">整篇密度、峰位、断裂点、末段方向</text>
+    <text x="510" y="456" fill="#3d4450">——这些它原本完全不管</text>
+
+    <rect x="0" y="460" width="400" height="54" fill="#f6f4ef" stroke="#e2ded6"/>
+    <text x="10" y="478" font-size="9.5" font-weight="700" fill="#a33a3a">不能约束</text>
+    <text x="10" y="495" fill="#3d4450">无（它就是全部）</text>
+    <rect x="500" y="460" width="400" height="54" fill="#f6f4ef" stroke="#e2ded6"/>
+    <text x="510" y="478" font-size="9.5" font-weight="700" fill="#a33a3a">不能约束</text>
+    <text x="510" y="495" fill="#3d4450">这一句好不好、这个人像不像</text>
+    <text x="510" y="510" fill="#3d4450">——文学质量仍归语言层</text>
+  </g>
+
+  <rect x="0" y="524" width="900" height="42" fill="#2f6f8f" opacity="0.07"/>
+  <text x="12" y="543" font-size="10.5" fill="#3d4450">本质差别只有一条：直接续写没有「全篇」概念，它只有窗口；认知空间续写先有全篇坐标，再往下填。</text>
+  <text x="12" y="560" font-size="10.5" fill="#3d4450">所以前者只能问「像不像」，后者能问「对不对」——而「对不对」是可以算出来的。</text>
+</svg>
+</body>
+</html>
