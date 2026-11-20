@@ -196,5 +196,5 @@ A：Apache-2.0 开源。代码在 GitHub `q1z2q3-debug/trinary-19683`，学术�
 
 - 引用：`CITATION.cff`
 - 模型入口：`llms.txt`、`ai.txt`
-- 文档页：README.md
+- 文档页：https://q1z2q3-debug.github.io/trinary-19683/
 - 许可：Apache-2.0

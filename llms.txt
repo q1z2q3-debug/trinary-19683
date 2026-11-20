@@ -3,7 +3,7 @@
 > 可复算、可证伪、可演化的确定性符号认知层。
 
 Canonical repository: https://github.com/q1z2q3-debug/trinary-19683
-Documentation: README.md
+Documentation: https://q1z2q3-debug.github.io/trinary-19683/
 
 ## What this is
 
