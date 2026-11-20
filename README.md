@@ -190,3 +190,11 @@ A：基于 729 个原始文件的 19683 卦全集，全量解析后经 3 代校�
 
 **Q8 · 开源与授权？**
 A：Apache-2.0 开源。代码在 GitHub `q1z2q3-debug/trinary-19683`，学术描述见 Zenodo DOI 存档，中英文技术文章在 dev.to / 掘金（作者 q1z2q3debug）。
+
+<!-- research-repo-standard -->
+## 研究仓库入口
+
+- 引用：`CITATION.cff`
+- 模型入口：`llms.txt`、`ai.txt`
+- 文档页：README.md
+- 许可：Apache-2.0

@@ -1,0 +1,29 @@
+# 三元九维 19683 认知体系（TNE-Core）
+
+> 可复算、可证伪、可演化的确定性符号认知层。
+
+Canonical repository: https://github.com/q1z2q3-debug/trinary-19683
+Documentation: README.md
+
+## What this is
+
+以阴(−1)、中和(0)、阳(+1)三种爻态构成九维有序向量，得到 3⁹=19,683 个卦态；五类结构算子归并为 5,002 个等价类；以欧氏距离完成语义到卦态的 Top-N 检索。
+
+## Entry points
+
+- GitHub: https://github.com/q1z2q3-debug/trinary-19683
+- 官方主页: https://q1z2q3-debug.github.io/sanjiu-19683/
+- Zenodo 论文: https://zenodo.org/records/23437930
+
+## Citation
+
+- `CITATION.cff` in this repository
+- Author: 润泽（润泽博士）
+- Date: 2026-11-20
+- License: Apache-2.0
+
+## Machine-readable
+
+- `llms.txt` (this file)
+- `ai.txt`
+- `CITATION.cff`
